@@ -1,19 +1,42 @@
 using HexagonGencer.Enums;
 using HexagonGencer.Factory;
+using HexagonGencer.Game.Core.Concrete;
+using HexagonGencer.Game.Models.Abstract;
+using HexagonGencer.Utils;
+using UniRx;
 using UnityEngine;
 
-namespace HexagonGencer.Game.Core.Concrete
+namespace HexicClone.Game.Core
 {
-    public class Hexagon : MonoBehaviour
+    public class Hexagon : MonoBehaviour, IItem
     {
         #region Fields
 
-        public HexagonColor HexagonColor;
         [SerializeField] private SpriteRenderer _spriteRenderer;
+
+        public Cell Cell { get; set; }
+
+        public IntReactiveProperty SortingOrder { get; set; } = new IntReactiveProperty(0);
+
+        public Transform Transform { get; set; }
+
+        public ItemColor ItemColor { get; set; }
 
         #endregion
 
         #region Unity
+
+        private void OnEnable()
+        {
+            this.Transform = transform;
+
+            transform.rotation = Quaternion.identity;
+
+            SortingOrder.Subscribe(order =>
+            {
+                _spriteRenderer.sortingOrder = order;
+            });
+        }
 
         #endregion
 
@@ -21,12 +44,17 @@ namespace HexagonGencer.Game.Core.Concrete
 
         public void SetRandomColor()
         {
-            var colorIndex = Random.Range(0, 7);
+            var colorIndex = Random.Range(0, HexagonGencerUtils.NUMBER_OF_COLORS);
 
-            HexagonColor = (HexagonColor)colorIndex;
+            ItemColor = (ItemColor)colorIndex;
 
             _spriteRenderer.color =
-                ColorFactory.GetColor(HexagonColor);
+                ColorFactory.GetColor(ItemColor);
+        }
+
+        public void Execute()
+        {
+
         }
 
         #endregion
