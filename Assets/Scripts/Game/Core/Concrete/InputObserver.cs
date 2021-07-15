@@ -102,7 +102,6 @@ namespace HexagonGencer.Game.Core.Concrete
                 .Where(position => Mathf.Abs(_startPosition.x - position.x) >= _minDistance)
                 .Subscribe(_ =>
                 {
-                    Debug.Log("Swipe Left");
                     _onSwipeLeft.OnNext(Unit.Default);
 
                 }).AddTo(_disposables);
@@ -117,7 +116,6 @@ namespace HexagonGencer.Game.Core.Concrete
                 .Where(position => Mathf.Abs(position.x - _startPosition.x) >= _minDistance)
                 .Subscribe(_ =>
                 {
-                    Debug.Log("Swipe Right");
                     _onSwipeRight.OnNext(Unit.Default);
 
                 }).AddTo(_disposables);
@@ -132,7 +130,6 @@ namespace HexagonGencer.Game.Core.Concrete
                 .Where(position => Mathf.Abs(_startPosition.y - position.y) >= _minDistance)
                 .Subscribe(_ =>
                 {
-                    Debug.Log("Swipe Down");
                     _onSwipeDown.OnNext(Unit.Default);
 
                 }).AddTo(_disposables);
@@ -147,7 +144,6 @@ namespace HexagonGencer.Game.Core.Concrete
                 .Where(position => Mathf.Abs(position.y - _startPosition.y) >= _minDistance)
                 .Subscribe(_ =>
                 {
-                    Debug.Log("Swipe Up");
                     _onSwipeUp.OnNext(Unit.Default);
 
                 }).AddTo(_disposables);
@@ -160,7 +156,6 @@ namespace HexagonGencer.Game.Core.Concrete
                 })
                 .Subscribe(position =>
                 {
-                    Debug.Log("Click");
                     _onClick.OnNext(position);
 
                 }).AddTo(_disposables);
