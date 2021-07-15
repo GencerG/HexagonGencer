@@ -23,6 +23,8 @@ namespace HexagonGencer.Game.Controller.Concrete
         private readonly List<Cell> _cellList 
             = new List<Cell>();
 
+        private Dictionary<int, int> _explodeInfo 
+            = new Dictionary<int, int>();
 
         #endregion
 
@@ -30,6 +32,9 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         private Subject<Tuple<IItem, IItem, IItem>> _onStartRotating 
             = new Subject<Tuple<IItem, IItem, IItem>>();
+
+        private Subject<List<Cell>> _onMatch 
+            = new Subject<List<Cell>>();
 
         #endregion
 
@@ -43,6 +48,7 @@ namespace HexagonGencer.Game.Controller.Concrete
             InitializePool();
             InitializeItems();
             InitializeOutline();
+            InitializeDictionary();
             BindInputEvents();
             BindGridManager();
         }
@@ -100,6 +106,14 @@ namespace HexagonGencer.Game.Controller.Concrete
                 .GetAsset(GameObjectAssetModel.OutlinePrefab));
 
             _outline.SetActive(false);
+        }
+
+        private void InitializeDictionary()
+        {
+            for (int i = 0; i < HexagonGencerUtils.BOARD_WIDTH; ++i)
+            {
+                _explodeInfo.Add(i, 0);
+            }
         }
 
         #endregion

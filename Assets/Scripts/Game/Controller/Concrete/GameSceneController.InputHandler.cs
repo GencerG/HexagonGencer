@@ -5,6 +5,7 @@ using HexagonGencer.Game.Core.Concrete;
 using HexagonGencer.Game.Models.Abstract;
 using HexagonGencer.Utils;
 using System;
+using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
@@ -150,7 +151,7 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         #endregion
 
-        #region Helper Methods
+        #region Custom Methods
 
         private void MoveOutline(Vector3 position, Vector3 eulerAngles)
         {
@@ -182,7 +183,21 @@ namespace HexagonGencer.Game.Controller.Concrete
                .OnStart(() => _onStartRotating.OnNext(_currentTuple))
                 .OnComplete(() =>
                 {
+                    List<Cell> matchables = new List<Cell>();
+                    CheckTuples(_currentTuple.Item1.Cell, ref matchables);
+                    CheckTuples(_currentTuple.Item2.Cell, ref matchables);
+                    CheckTuples(_currentTuple.Item3.Cell, ref matchables);
 
+                    foreach (Cell cell in matchables)
+                    {
+                        cell.Execute();
+                    }
+
+                    if (matchables.Count >= 3)
+                    {
+                        rotationSequence.Kill();
+                        _onMatch.OnNext(matchables);
+                    }
                 }));
 
             rotationSequence.AppendInterval(0.01f).Append(objectToRotate.transform.DORotate(
@@ -192,6 +207,21 @@ namespace HexagonGencer.Game.Controller.Concrete
                OnStart(() => _onStartRotating.OnNext(_currentTuple))
                 .OnComplete(() =>
                 {
+                    List<Cell> matchables = new List<Cell>();
+                    CheckTuples(_currentTuple.Item1.Cell, ref matchables);
+                    CheckTuples(_currentTuple.Item2.Cell, ref matchables);
+                    CheckTuples(_currentTuple.Item3.Cell, ref matchables);
+
+                    foreach (Cell cell in matchables)
+                    {
+                        cell.Execute();
+                    }
+
+                    if (matchables.Count >= 3)
+                    {
+                        rotationSequence.Kill();
+                        _onMatch.OnNext(matchables);
+                    }
 
                 }));
 

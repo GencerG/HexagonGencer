@@ -1,7 +1,6 @@
 using HexagonGencer.Game.Core.Concrete;
 using HexagonGencer.Game.Models.Abstract;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +8,8 @@ namespace HexagonGencer.Game.Controller.Concrete
 {
     public partial class GameSceneController
     {
+        #region Custom Methods
+
         private void SetTupleParent(Tuple<IItem, IItem, IItem> tuple, Transform parent)
         {
             if (tuple == null) { return; }
@@ -37,10 +38,25 @@ namespace HexagonGencer.Game.Controller.Concrete
             return position;
         }
 
+        private List<Cell> CheckTuples(Cell startCell, ref List<Cell> matchables)
+        {
+            if (startCell == null) { return null; }
+
+            var list = startCell.CheckTuples(ref matchables);
+
+            foreach (Cell cell in _cellList)
+            {
+                cell.IsAdded = false;
+            }
+
+            return list;
+        }
+
         private bool CheckNullItemInTuple(Tuple<IItem, IItem, IItem> tuple)
         {
             return tuple.Item1 == null || tuple.Item2 == null || tuple.Item3 == null;
         }
-    }
 
+        #endregion
+    }
 }

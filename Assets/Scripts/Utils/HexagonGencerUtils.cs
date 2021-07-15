@@ -127,6 +127,12 @@ namespace HexagonGencer.Utils
             }
         }
 
+        public static Cell GetTopCell(int column, List<Cell> cellList)
+        {
+            var index = column + (BOARD_WIDTH * (BOARD_HEIGHT - 1));
+            return cellList[index];
+        }
+
         #endregion
     }
 }

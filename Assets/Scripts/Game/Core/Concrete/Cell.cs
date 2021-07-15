@@ -36,6 +36,57 @@ namespace HexagonGencer.Game.Core.Concrete
             _cellBelow = neighbours[3];
         }
 
+        public Cell GetTargetCell()
+        {
+            Cell targetCell = this;
+
+            while (targetCell._cellBelow != null && targetCell._cellBelow.Item == null)
+            {
+                targetCell = targetCell._cellBelow;
+            }
+
+            return targetCell;
+        }
+
+        public List<Cell> CheckTuples(ref List<Cell> matchables)
+        {
+            for (int i = 0; i < 6; ++i)
+            {
+                var tuple = TupleFactory.GetItemTuple(Item, i);
+
+                if (tuple == null)
+                    continue;
+
+                var isMatching = tuple.Item1.ItemColor == tuple.Item2.ItemColor && tuple.Item1.ItemColor == tuple.Item3.ItemColor;
+
+                if (isMatching)
+                {
+                    if (!tuple.Item1.Cell.IsAdded)
+                    {
+                        tuple.Item1.Cell.IsAdded = true;
+                        matchables.Add(tuple.Item1.Cell);
+                        tuple.Item1.Cell.CheckTuples(ref matchables);
+                    }
+
+                    if (!tuple.Item2.Cell.IsAdded)
+                    {
+                        tuple.Item2.Cell.IsAdded = true;
+                        matchables.Add(tuple.Item2.Cell);
+                        tuple.Item2.Cell.CheckTuples(ref matchables);
+                    }
+
+                    if (!tuple.Item3.Cell.IsAdded)
+                    {
+                        tuple.Item3.Cell.IsAdded = true;
+                        matchables.Add(tuple.Item3.Cell);
+                        tuple.Item3.Cell.CheckTuples(ref matchables);
+                    }
+                }
+            }
+
+            return matchables;
+        }
+
         public void Execute()
         {
             Item.Execute();
