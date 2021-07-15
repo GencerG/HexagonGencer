@@ -5,29 +5,29 @@ namespace HexagonGencer.Factory
 {
     public static class ColorFactory
     {
-        public static Color GetColor(HexagonColor itemColor)
+        public static Color GetColor(ItemColor itemColor)
         {
             switch (itemColor)
             {
-                case HexagonColor.Blue:
+                case ItemColor.Blue:
                     return Color.blue;
 
-                case HexagonColor.Green:
+                case ItemColor.Green:
                     return Color.green;
 
-                case HexagonColor.Magenta:
+                case ItemColor.Magenta:
                     return Color.magenta;
 
-                case HexagonColor.Red:
+                case ItemColor.Red:
                     return Color.red;
 
-                case HexagonColor.Yellow:
+                case ItemColor.Yellow:
                     return Color.yellow;
 
-                case HexagonColor.Cyan:
+                case ItemColor.Cyan:
                     return Color.cyan;
 
-                case HexagonColor.Orange:
+                case ItemColor.Orange:
                     return new Color(1.0f, 0.64f, 0.0f);
             }
 
