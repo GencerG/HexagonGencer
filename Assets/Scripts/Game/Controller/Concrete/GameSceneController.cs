@@ -4,6 +4,7 @@ using HexagonGencer.Game.Core.Concrete;
 using HexagonGencer.Game.Models.Abstract;
 using HexagonGencer.Game.Models.Concrete;
 using HexagonGencer.Utils;
+using System;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
@@ -25,6 +26,13 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         #endregion
 
+        #region Subjects
+
+        private Subject<Tuple<IItem, IItem, IItem>> _onStartRotating 
+            = new Subject<Tuple<IItem, IItem, IItem>>();
+
+        #endregion
+
         #region Scene Controller
 
         public override BoolReactiveProperty ShouldRenderNewScene { get; set; }
@@ -36,6 +44,7 @@ namespace HexagonGencer.Game.Controller.Concrete
             InitializeItems();
             InitializeOutline();
             BindInputEvents();
+            BindGridManager();
         }
 
         #endregion
