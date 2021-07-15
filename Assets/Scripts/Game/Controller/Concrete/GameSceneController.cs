@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HexagonGencer.Game.Controller.Concrete
 {
-    public class GameSceneController : SceneController
+    public partial class GameSceneController : SceneController
     {
         #region Scene Controller
 
