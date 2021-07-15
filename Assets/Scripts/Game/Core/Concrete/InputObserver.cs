@@ -21,26 +21,26 @@ namespace HexagonGencer.Game.Core.Concrete
 
         #region Subjects
 
-        private Subject<Unit> _onSwipeLeft = new Subject<Unit>();
-        public IObservable<Unit> OnSwipeLeft
+        private Subject<Vector2> _onSwipeLeft = new Subject<Vector2>();
+        public IObservable<Vector2> OnSwipeLeft
         {
             get { return _onSwipeLeft; }
         }
 
-        private Subject<Unit> _onSwipeRight = new Subject<Unit>();
-        public IObservable<Unit> OnSwipeRight
+        private Subject<Vector2> _onSwipeRight = new Subject<Vector2>();
+        public IObservable<Vector2> OnSwipeRight
         {
             get { return _onSwipeRight; }
         }
 
-        private Subject<Unit> _onSwipeDown = new Subject<Unit>();
-        public IObservable<Unit> OnSwipeDown
+        private Subject<Vector2> _onSwipeDown = new Subject<Vector2>();
+        public IObservable<Vector2> OnSwipeDown
         {
             get { return _onSwipeDown; }
         }
 
-        private Subject<Unit> _onSwipeUp = new Subject<Unit>();
-        public IObservable<Unit> OnSwipeUp
+        private Subject<Vector2> _onSwipeUp = new Subject<Vector2>();
+        public IObservable<Vector2> OnSwipeUp
         {
             get { return _onSwipeUp; }
         }
@@ -100,9 +100,9 @@ namespace HexagonGencer.Game.Core.Concrete
                 })
                 .Where(position => _startPosition.x > position.x)
                 .Where(position => Mathf.Abs(_startPosition.x - position.x) >= _minDistance)
-                .Subscribe(_ =>
+                .Subscribe(position =>
                 {
-                    _onSwipeLeft.OnNext(Unit.Default);
+                    _onSwipeLeft.OnNext(position);
 
                 }).AddTo(_disposables);
 
@@ -114,9 +114,9 @@ namespace HexagonGencer.Game.Core.Concrete
                 })
                 .Where(position => position.x > _startPosition.x)
                 .Where(position => Mathf.Abs(position.x - _startPosition.x) >= _minDistance)
-                .Subscribe(_ =>
+                .Subscribe(position =>
                 {
-                    _onSwipeRight.OnNext(Unit.Default);
+                    _onSwipeRight.OnNext(position);
 
                 }).AddTo(_disposables);
 
@@ -128,9 +128,9 @@ namespace HexagonGencer.Game.Core.Concrete
                 })
                 .Where(position => _startPosition.y > position.y)
                 .Where(position => Mathf.Abs(_startPosition.y - position.y) >= _minDistance)
-                .Subscribe(_ =>
+                .Subscribe(position =>
                 {
-                    _onSwipeDown.OnNext(Unit.Default);
+                    _onSwipeDown.OnNext(position);
 
                 }).AddTo(_disposables);
 
@@ -142,9 +142,9 @@ namespace HexagonGencer.Game.Core.Concrete
                 })
                 .Where(position => position.y > _startPosition.y)
                 .Where(position => Mathf.Abs(position.y - _startPosition.y) >= _minDistance)
-                .Subscribe(_ =>
+                .Subscribe(position =>
                 {
-                    _onSwipeUp.OnNext(Unit.Default);
+                    _onSwipeUp.OnNext(position);
 
                 }).AddTo(_disposables);
 
@@ -161,11 +161,12 @@ namespace HexagonGencer.Game.Core.Concrete
                 }).AddTo(_disposables);
         }
 
-        #endregion
-
         private void OnDisable()
         {
             _disposables.Dispose();
         }
+
+        #endregion
+
     }
 }
