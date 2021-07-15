@@ -1,7 +1,7 @@
 
 namespace HexagonGencer.Enums
 {
-    public enum HexagonColor
+    public enum ItemColor
     {
         Red,
         Yellow,
@@ -12,7 +12,7 @@ namespace HexagonGencer.Enums
         Orange
     }
 
-    public enum HexagonCorner
+    public enum ItemCorner
     {
         TopRight,
         Right,
