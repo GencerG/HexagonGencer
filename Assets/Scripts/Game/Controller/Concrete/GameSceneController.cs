@@ -1,6 +1,7 @@
 using HexagonGencer.Factory;
 using HexagonGencer.Game.Controller.Abstract;
 using HexagonGencer.Game.Core.Concrete;
+using HexagonGencer.Game.Models.Abstract;
 using HexagonGencer.Game.Models.Concrete;
 using HexagonGencer.Utils;
 using System.Collections.Generic;
@@ -18,7 +19,9 @@ namespace HexagonGencer.Game.Controller.Concrete
         private GameObject _poolContainer;
         private GameObject _outline;
 
-        private readonly List<Hexagon> _hexagonList = new List<Hexagon>();
+        private readonly List<Cell> _cellList 
+            = new List<Cell>();
+
 
         #endregion
 
@@ -30,7 +33,8 @@ namespace HexagonGencer.Game.Controller.Concrete
         public override void InitializeScene()
         {
             InitializePool();
-            InitializeHexagons();
+            InitializeItems();
+            InitializeOutline();
             BindInputEvents();
         }
 
@@ -48,23 +52,37 @@ namespace HexagonGencer.Game.Controller.Concrete
             _objectPool.InstantiatePool();
         }
 
-        private void InitializeHexagons()
+        private void InitializeItems()
         {
             for (int i = 0; i < HexagonGencerUtils.BOARD_HEIGHT; ++i)
             {
                 for (int j = 0; j < HexagonGencerUtils.BOARD_WIDTH; ++j)
                 {
-                    var hexPosition = HexagonGencerUtils.GetHexagonPosition(i, j);
-                    var hexagonObjectInstance = _objectPool.GetFromPool();
-                    hexagonObjectInstance.transform.position = hexPosition;
+                    var itemPosition = HexagonGencerUtils.GetItemPosition(i, j);
 
-                    if (!hexagonObjectInstance.TryGetComponent<Hexagon>(out Hexagon hexagon)) return;
-                    hexagon.SetRandomColor();
-                    _hexagonList.Add(hexagon);
+                    var cellObjectInstance = GameObject.Instantiate(AssetFactory.GetAsset(GameObjectAssetModel.CellPrefab));
+                    cellObjectInstance.transform.position = itemPosition;
+
+                    if (!cellObjectInstance.TryGetComponent<Cell>(out Cell cellInstance)) return;
+                    _cellList.Add(cellInstance);
+
+                    var hexInstance = _objectPool.GetFromPool();
+                    hexInstance.transform.position = cellObjectInstance.transform.position;
+
+                    if (!hexInstance.TryGetComponent<IItem>(out IItem item)) return;
+                    cellInstance.UpdateHexagon(item);
+                    item.SetRandomColor();
+                    cellInstance.Row = i;
+                    cellInstance.Column = j;
+                    cellInstance.transform.name = cellInstance.Index.ToString();
+                    hexInstance.transform.GetChild(0).GetComponent<TextMesh>().text = cellInstance.Index.ToString();
                 }
             }
 
-            InitializeOutline();
+            foreach (Cell cell in _cellList)
+            {
+                cell.SetNeighbours(HexagonGencerUtils.GetNeighboursFromCell(cell, _cellList));
+            }
         }
 
         private void InitializeOutline()
