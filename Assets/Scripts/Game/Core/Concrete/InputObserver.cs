@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class InputObserver : ObservableEventTrigger
 {
-    [SerializeField] private float _minTime = .75f;
-    [SerializeField] private float _minDistance = 50.0f;
+    [SerializeField] private float _minTime = 1;
+    [SerializeField] private float _minDistance = 100.0f;
 
     private Vector2 _startPosition;
     private DateTime _startTime;
