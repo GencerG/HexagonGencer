@@ -63,6 +63,16 @@ namespace HexagonGencer.Game.Controller.Concrete
                     _hexagonList.Add(hexagon);
                 }
             }
+
+            InitializeOutline();
+        }
+
+        private void InitializeOutline()
+        {
+            _outline = GameObject.Instantiate(AssetFactory
+                .GetAsset(GameObjectAssetModel.OutlinePrefab));
+
+            _outline.SetActive(false);
         }
 
         #endregion

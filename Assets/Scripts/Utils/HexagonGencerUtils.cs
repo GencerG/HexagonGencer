@@ -1,3 +1,4 @@
+using HexagonGencer.Enums;
 using UnityEngine;
 
 namespace HexagonGencer.Utils
@@ -38,6 +39,49 @@ namespace HexagonGencer.Utils
             var layerMask = LayerMask.GetMask(LAYER_MASK);
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, layerMask);
             return hit;
+        }
+
+        public static HexagonCorner GetHexCorner(Vector2 hexPosition, Vector2 hitPosition)
+        {
+            var direction = hitPosition - hexPosition;
+            direction.Normalize();
+
+            var angle = Vector2.SignedAngle(Vector2.right, direction);
+
+            if (angle > -30f && angle <= 30f)
+            {
+                return HexagonCorner.Right;
+            }
+
+            else if (angle > 30f && angle <= 90f)
+            {
+                return HexagonCorner.TopRight;
+            }
+
+            else if (angle > 90f && angle <= 150f)
+            {
+                return HexagonCorner.TopLeft;
+            }
+
+            else if (angle > 150f && angle <= -150f)
+            {
+                return HexagonCorner.Left;
+            }
+
+            else if (angle > -150f && angle <= -90f)
+            {
+                return HexagonCorner.BottomLeft;
+            }
+
+            else if (angle > -90f && angle <= -30f)
+            {
+                return HexagonCorner.BottomRight;
+            }
+
+            else
+            {
+                return HexagonCorner.Left;
+            }
         }
 
         #endregion

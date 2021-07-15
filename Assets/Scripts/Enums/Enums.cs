@@ -11,4 +11,14 @@ namespace HexagonGencer.Enums
         Magenta,
         Orange
     }
+
+    public enum HexagonCorner
+    {
+        TopRight,
+        Right,
+        BottomRight,
+        BottomLeft,
+        Left,
+        TopLeft
+    }
 }
