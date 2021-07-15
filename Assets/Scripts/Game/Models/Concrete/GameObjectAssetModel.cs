@@ -26,5 +26,13 @@ namespace HexagonGencer.Game.Models.Concrete
                 return new GameObjectAssetModel("Prefabs/Outline");
             }
         }
+
+        public static GameObjectAssetModel CellPrefab
+        {
+            get
+            {
+                return new GameObjectAssetModel("Prefabs/Cell");
+            }
+        }
     }
 }
