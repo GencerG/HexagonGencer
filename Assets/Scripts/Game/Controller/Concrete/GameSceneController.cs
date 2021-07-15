@@ -31,6 +31,7 @@ namespace HexagonGencer.Game.Controller.Concrete
         {
             InitializePool();
             InitializeHexagons();
+            BindInputEvents();
         }
 
         #endregion

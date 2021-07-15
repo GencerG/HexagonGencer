@@ -13,6 +13,8 @@ namespace HexagonGencer.Utils
         public const float y_MUL = 2.2f;
         public const float y_OFFSET_EVEN_ROWS = 1.1F;
 
+        public const string LAYER_MASK = "Hexagon";
+
         #endregion
 
         #region Helper Methods
@@ -28,6 +30,14 @@ namespace HexagonGencer.Utils
             {
                 return new Vector2(j * x_MUL, i * y_MUL);
             }
+        }
+
+        public static RaycastHit2D RayCast2D(Vector2 screenPoisition)
+        {
+            var ray = Camera.main.ScreenPointToRay(screenPoisition);
+            var layerMask = LayerMask.GetMask(LAYER_MASK);
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, layerMask);
+            return hit;
         }
 
         #endregion
