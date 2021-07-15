@@ -1,7 +1,9 @@
 using HexagonGencer.Factory;
 using HexagonGencer.Game.Controller.Abstract;
+using HexagonGencer.Game.Core.Concrete;
 using HexagonGencer.Game.Models.Concrete;
 using HexagonGencer.Utils;
+using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
@@ -16,6 +18,12 @@ namespace HexagonGencer.Game.Controller.Concrete
         private GameObject _poolContainer;
         private GameObject _outline;
 
+        private readonly List<Hexagon> _hexagonList = new List<Hexagon>();
+
+        private float xMul = 1.9f;
+        private float yMul = 2.2f;
+        private float offset = 1.1f;
+
         #endregion
 
         #region Scene Controller
@@ -25,7 +33,8 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         public override void InitializeScene()
         {
-
+            InitializePool();
+            InitializeHexagons();
         }
 
         #endregion
@@ -40,6 +49,36 @@ namespace HexagonGencer.Game.Controller.Concrete
             _poolContainer = GameObject.Find("PoolContainer");
             _objectPool = new ObjectPool(prefab, _poolContainer.transform);
             _objectPool.InstantiatePool();
+        }
+
+        private void InitializeHexagons()
+        {
+            for (int i = 0; i < HexagonGencerUtils.BOARD_HEIGHT; ++i)
+            {
+                for (int j = 0; j < HexagonGencerUtils.BOARD_WIDTH; ++j)
+                {
+                    var hexPosition = CalculatePosition(i, j);
+                    var hexagonObjectInstance = _objectPool.GetFromPool();
+                    hexagonObjectInstance.transform.position = hexPosition;
+
+                    if (!hexagonObjectInstance.TryGetComponent<Hexagon>(out Hexagon hexagon)) return;
+                    hexagon.SetRandomColor();
+                    _hexagonList.Add(hexagon);
+                }
+            }
+        }
+
+        private Vector2 CalculatePosition(int i, int j)
+        {
+            if (j % 2 == 0)
+            {
+                return new Vector2(j * xMul, i * yMul + offset);
+            }
+
+            else
+            {
+                return new Vector2(j * xMul, i * yMul);
+            }
         }
 
         #endregion
