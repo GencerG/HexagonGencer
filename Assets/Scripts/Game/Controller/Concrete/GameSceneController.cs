@@ -20,10 +20,6 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         private readonly List<Hexagon> _hexagonList = new List<Hexagon>();
 
-        private float xMul = 1.9f;
-        private float yMul = 2.2f;
-        private float offset = 1.1f;
-
         #endregion
 
         #region Scene Controller
@@ -57,7 +53,7 @@ namespace HexagonGencer.Game.Controller.Concrete
             {
                 for (int j = 0; j < HexagonGencerUtils.BOARD_WIDTH; ++j)
                 {
-                    var hexPosition = CalculatePosition(i, j);
+                    var hexPosition = HexagonGencerUtils.GetHexagonPosition(i, j);
                     var hexagonObjectInstance = _objectPool.GetFromPool();
                     hexagonObjectInstance.transform.position = hexPosition;
 
@@ -65,19 +61,6 @@ namespace HexagonGencer.Game.Controller.Concrete
                     hexagon.SetRandomColor();
                     _hexagonList.Add(hexagon);
                 }
-            }
-        }
-
-        private Vector2 CalculatePosition(int i, int j)
-        {
-            if (j % 2 == 0)
-            {
-                return new Vector2(j * xMul, i * yMul + offset);
-            }
-
-            else
-            {
-                return new Vector2(j * xMul, i * yMul);
             }
         }
 
