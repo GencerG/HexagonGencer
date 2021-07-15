@@ -1,3 +1,4 @@
+using DG.Tweening;
 using HexagonGencer.Enums;
 using HexagonGencer.Factory;
 using HexagonGencer.Game.Core.Concrete;
@@ -15,6 +16,7 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         private bool _isInteractable = true;
         private Tuple<IItem, IItem, IItem> _previousTuple, _currentTuple = null;
+        private float _rotationDirection;
 
         #endregion
 
@@ -82,24 +84,68 @@ namespace HexagonGencer.Game.Controller.Concrete
             _previousTuple = _currentTuple;
         }
 
-        private void HandleOnSwipeDown(Unit unit)
+        private void HandleOnSwipeDown(Vector2 mousePosition)
         {
+            if (!_isInteractable) { return; }
 
+            if (!_outline.activeInHierarchy) { return; }
+
+            _isInteractable = false;
+
+            var worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10f));
+
+            _rotationDirection = worldPosition.x < _outline.transform.position.x ?
+                HexagonGencerUtils.COUNTER_CLOCK_WISE : HexagonGencerUtils.CLOCK_WISE;
+
+            RotationTween(_outline.transform, _rotationDirection);
         }
 
-        private void HandleOnSwipeLeft(Unit unit)
+        private void HandleOnSwipeLeft(Vector2 mousePosition)
         {
+            if (!_isInteractable) { return; }
 
+            if (!_outline.activeInHierarchy) { return; }
+
+            _isInteractable = false;
+
+            var worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10f));
+
+            _rotationDirection = worldPosition.y > _outline.transform.position.y ?
+                HexagonGencerUtils.COUNTER_CLOCK_WISE : HexagonGencerUtils.CLOCK_WISE;
+
+            RotationTween(_outline.transform, _rotationDirection);
         }
 
-        private void HandleOnSwipeRight(Unit unit)
+        private void HandleOnSwipeRight(Vector2 mousePosition)
         {
+            if (!_isInteractable) { return; }
 
+            if (!_outline.activeInHierarchy) { return; }
+
+            _isInteractable = false;
+
+            var worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10f));
+
+            _rotationDirection = worldPosition.y < _outline.transform.position.y ?
+                HexagonGencerUtils.COUNTER_CLOCK_WISE : HexagonGencerUtils.CLOCK_WISE;
+
+            RotationTween(_outline.transform, _rotationDirection);
         }
 
-        private void HandleOnSwipeUp(Unit unit)
+        private void HandleOnSwipeUp(Vector2 mousePosition)
         {
+            if (!_isInteractable) { return; }
 
+            if (!_outline.activeInHierarchy) { return; }
+
+            _isInteractable = false;
+
+            var worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10f));
+
+            _rotationDirection = worldPosition.x > _outline.transform.position.x ?
+                HexagonGencerUtils.COUNTER_CLOCK_WISE : HexagonGencerUtils.CLOCK_WISE;
+
+            RotationTween(_outline.transform, _rotationDirection);
         }
 
         #endregion
@@ -112,7 +158,6 @@ namespace HexagonGencer.Game.Controller.Concrete
             _outline.transform.localEulerAngles = eulerAngles;
         }
 
-
         private Vector3 GetOutlineAngles(ItemCorner corner)
         {
             if (corner == ItemCorner.BottomLeft ||
@@ -122,6 +167,41 @@ namespace HexagonGencer.Game.Controller.Concrete
 
             else
                 return Vector3.zero;
+        }
+
+        private void RotationTween(Transform objectToRotate, float angle)
+        {
+            var eulerAngles = objectToRotate.transform.localEulerAngles;
+
+            var rotationSequence = DOTween.Sequence();
+
+            rotationSequence.AppendInterval(0.01f).Append(objectToRotate.transform.DORotate(
+               new Vector3(0f, 0f, angle + eulerAngles.z),
+               HexagonGencerUtils.ROTATION_ANIMATON_DURATION,
+               RotateMode.Fast).SetEase(Ease.Linear)
+               .OnStart(() => _onStartRotating.OnNext(_currentTuple))
+                .OnComplete(() =>
+                {
+
+                }));
+
+            rotationSequence.AppendInterval(0.01f).Append(objectToRotate.transform.DORotate(
+               new Vector3(0f, 0f, angle * 2 + eulerAngles.z),
+               HexagonGencerUtils.ROTATION_ANIMATON_DURATION,
+               RotateMode.Fast).SetEase(Ease.Linear).
+               OnStart(() => _onStartRotating.OnNext(_currentTuple))
+                .OnComplete(() =>
+                {
+
+                }));
+
+            rotationSequence.AppendInterval(0.01f).Append(objectToRotate.transform.DORotate(
+               new Vector3(0f, 0f, angle * 3 + eulerAngles.z),
+               HexagonGencerUtils.ROTATION_ANIMATON_DURATION,
+               RotateMode.Fast).SetEase(Ease.Linear)
+               .OnStart(() => _onStartRotating.OnNext(_currentTuple)));
+
+            rotationSequence.OnComplete(() => _isInteractable = true);
         }
 
         #endregion
