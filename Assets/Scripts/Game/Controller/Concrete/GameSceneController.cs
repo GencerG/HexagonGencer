@@ -20,6 +20,8 @@ namespace HexagonGencer.Game.Controller.Concrete
         private GameObject _poolContainer;
         private GameObject _outline;
 
+        private Camera _mainCam;
+
         private readonly List<Cell> _cellList 
             = new List<Cell>();
 
@@ -52,6 +54,7 @@ namespace HexagonGencer.Game.Controller.Concrete
             BindInputEvents();
             BindGridManager();
             BindUIManager();
+            SetCameraBounds();
         }
 
         #endregion
@@ -115,6 +118,22 @@ namespace HexagonGencer.Game.Controller.Concrete
             {
                 _explodeInfo.Add(i, 0);
             }
+        }
+
+        private void SetCameraBounds()
+        {
+            _mainCam = Camera.main;
+
+            var upperIndex = _cellList.Count - (int)Mathf.Ceil(HexagonGencerUtils.BOARD_WIDTH / 2);
+            var upperCenter = (_cellList[upperIndex].transform.position + _cellList[upperIndex - 1].transform.position) / 2;
+            var lowerIndex = HexagonGencerUtils.BOARD_WIDTH - (int)Mathf.Ceil(HexagonGencerUtils.BOARD_WIDTH / 2);
+            var lowerCenter = (_cellList[lowerIndex].transform.position + _cellList[lowerIndex - 1].transform.position) / 2;
+
+            var position = (upperCenter + lowerCenter) / 2;
+            position.z = _mainCam.transform.position.z;
+
+            _mainCam.transform.position = position;
+            _mainCam.orthographicSize = upperCenter.y;
         }
 
         #endregion
