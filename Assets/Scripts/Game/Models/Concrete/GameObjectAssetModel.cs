@@ -34,5 +34,13 @@ namespace HexagonGencer.Game.Models.Concrete
                 return new GameObjectAssetModel("Prefabs/Cell");
             }
         }
+
+        public static GameObjectAssetModel HexagonBomb
+        {
+            get
+            {
+                return new GameObjectAssetModel("Prefabs/HexagonBomb");
+            }
+        }
     }
 }
