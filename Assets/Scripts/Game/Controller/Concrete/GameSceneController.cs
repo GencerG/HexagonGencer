@@ -156,7 +156,7 @@ namespace HexagonGencer.Game.Controller.Concrete
         {
             _mainCam = Camera.main;
 
-            var upperIndex = _cellList.Count - (int)Mathf.Ceil(HexagonGencerUtils.GameSettings.BOARD_WIDTH / 2);
+            var upperIndex = _cellList.Count - Mathf.CeilToInt(HexagonGencerUtils.GameSettings.BOARD_WIDTH / 2f);
             var upperCenter = (_cellList[upperIndex].transform.position + _cellList[upperIndex - 1].transform.position) / 2;
             var lowerIndex = HexagonGencerUtils.GameSettings.BOARD_WIDTH - (int)Mathf.Ceil(HexagonGencerUtils.GameSettings.BOARD_WIDTH / 2);
             var lowerCenter = (_cellList[lowerIndex].transform.position + _cellList[lowerIndex - 1].transform.position) / 2;
