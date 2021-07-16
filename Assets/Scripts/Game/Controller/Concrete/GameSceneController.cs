@@ -73,9 +73,9 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         private void InitializeItems()
         {
-            for (int i = 0; i < HexagonGencerUtils.BOARD_HEIGHT; ++i)
+            for (int i = 0; i < HexagonGencerUtils.GameSettings.BOARD_HEIGHT; ++i)
             {
-                for (int j = 0; j < HexagonGencerUtils.BOARD_WIDTH; ++j)
+                for (int j = 0; j < HexagonGencerUtils.GameSettings.BOARD_WIDTH; ++j)
                 {
                     var itemPosition = HexagonGencerUtils.GetItemPosition(i, j);
 
@@ -114,7 +114,7 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         private void InitializeDictionary()
         {
-            for (int i = 0; i < HexagonGencerUtils.BOARD_WIDTH; ++i)
+            for (int i = 0; i < HexagonGencerUtils.GameSettings.BOARD_WIDTH; ++i)
             {
                 _explodeInfo.Add(i, 0);
             }
@@ -124,9 +124,9 @@ namespace HexagonGencer.Game.Controller.Concrete
         {
             _mainCam = Camera.main;
 
-            var upperIndex = _cellList.Count - (int)Mathf.Ceil(HexagonGencerUtils.BOARD_WIDTH / 2);
+            var upperIndex = _cellList.Count - (int)Mathf.Ceil(HexagonGencerUtils.GameSettings.BOARD_WIDTH / 2);
             var upperCenter = (_cellList[upperIndex].transform.position + _cellList[upperIndex - 1].transform.position) / 2;
-            var lowerIndex = HexagonGencerUtils.BOARD_WIDTH - (int)Mathf.Ceil(HexagonGencerUtils.BOARD_WIDTH / 2);
+            var lowerIndex = HexagonGencerUtils.GameSettings.BOARD_WIDTH - (int)Mathf.Ceil(HexagonGencerUtils.GameSettings.BOARD_WIDTH / 2);
             var lowerCenter = (_cellList[lowerIndex].transform.position + _cellList[lowerIndex - 1].transform.position) / 2;
 
             var position = (upperCenter + lowerCenter) / 2;

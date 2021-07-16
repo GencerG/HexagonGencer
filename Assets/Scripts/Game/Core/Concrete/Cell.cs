@@ -15,7 +15,7 @@ namespace HexagonGencer.Game.Core.Concrete
         public int Row;
         public int Column;
         public bool IsAdded = false;
-        public int Index => HexagonGencerUtils.BOARD_WIDTH * Row + Column;
+        public int Index => HexagonGencerUtils.GameSettings.BOARD_WIDTH * Row + Column;
 
         public void UpdateHexagon(IItem newItem)
         {

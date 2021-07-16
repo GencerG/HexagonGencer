@@ -1,5 +1,6 @@
 using HexagonGencer.Enums;
 using HexagonGencer.Game.Core.Concrete;
+using HexagonGencer.Game.Scripables;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,11 +8,15 @@ namespace HexagonGencer.Utils
 {
     public static class HexagonGencerUtils
     {
+        #region Settings
+
+        public static GameSettings GameSettings 
+            = Resources.Load("ScriptableObjects/GameSettings") as GameSettings;
+
+        #endregion
+
         #region Constants
 
-        public static int BOARD_WIDTH = 8;
-        public static int BOARD_HEIGHT = 9;
-        public static int NUMBER_OF_COLORS = 7;
         public static readonly float CLOCK_WISE = -120f;
         public static readonly float COUNTER_CLOCK_WISE = 120f;
         public const float ROTATION_ANIMATON_DURATION = .2f;
@@ -36,15 +41,15 @@ namespace HexagonGencer.Utils
         public static Cell[] GetNeighboursFromCell(Cell cell, List<Cell> cellList)
         {
             var remainder = cell.Column % 2;
-            var offset = BOARD_WIDTH * remainder;
+            var offset = GameSettings.BOARD_WIDTH * remainder;
 
             var neighbours = new Cell[6] {
-                cell.Index < cellList.Count - BOARD_WIDTH ? cellList[cell.Index + BOARD_WIDTH] : null,
-                cell.Index < cellList.Count - (BOARD_WIDTH + 1) + offset ? cellList[cell.Index + (BOARD_WIDTH + 1) - offset] : null,
+                cell.Index < cellList.Count - GameSettings.BOARD_WIDTH ? cellList[cell.Index + GameSettings.BOARD_WIDTH] : null,
+                cell.Index < cellList.Count - (GameSettings.BOARD_WIDTH + 1) + offset ? cellList[cell.Index + (GameSettings.BOARD_WIDTH + 1) - offset] : null,
                 cell.Index >= -1 + offset && cell.Index != cellList.Count - 1 ? cellList[cell.Index + 1 - offset] : null,
-                cell.Index >= BOARD_WIDTH ? cellList[cell.Index - BOARD_WIDTH] : null,
+                cell.Index >= GameSettings.BOARD_WIDTH ? cellList[cell.Index - GameSettings.BOARD_WIDTH] : null,
                 cell.Index >= 1 + offset ? cellList[cell.Index - 1 - offset] : null,
-                cell.Index < cellList.Count - (BOARD_WIDTH - 1) + offset ? cellList[cell.Index + (BOARD_WIDTH - 1) - offset] : null,
+                cell.Index < cellList.Count - (GameSettings.BOARD_WIDTH - 1) + offset ? cellList[cell.Index + (GameSettings.BOARD_WIDTH - 1) - offset] : null,
             };
 
 
@@ -54,7 +59,7 @@ namespace HexagonGencer.Utils
                 neighbours[5] = null;
             }
 
-            if (cell.Column == BOARD_WIDTH - 1)
+            if (cell.Column == GameSettings.BOARD_WIDTH - 1)
             {
                 neighbours[1] = null;
                 neighbours[2] = null;
@@ -129,7 +134,7 @@ namespace HexagonGencer.Utils
 
         public static Cell GetTopCell(int column, List<Cell> cellList)
         {
-            var index = column + (BOARD_WIDTH * (BOARD_HEIGHT - 1));
+            var index = column + (GameSettings.BOARD_WIDTH * (GameSettings.BOARD_HEIGHT - 1));
             return cellList[index];
         }
 

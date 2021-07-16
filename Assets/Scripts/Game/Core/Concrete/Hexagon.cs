@@ -44,7 +44,7 @@ namespace HexicClone.Game.Core
 
         public void SetRandomColor()
         {
-            var colorIndex = Random.Range(0, HexagonGencerUtils.NUMBER_OF_COLORS);
+            var colorIndex = Random.Range(0, HexagonGencerUtils.GameSettings.NUMBER_OF_COLORS);
 
             ItemColor = (ItemColor)colorIndex;
 

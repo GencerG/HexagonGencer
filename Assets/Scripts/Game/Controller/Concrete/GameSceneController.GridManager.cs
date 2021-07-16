@@ -79,9 +79,9 @@ namespace HexagonGencer.Game.Controller.Concrete
                 if (entry.Value == 0)
                     continue;
 
-                for (int i = 1; i < HexagonGencerUtils.BOARD_HEIGHT; ++i)
+                for (int i = 1; i < HexagonGencerUtils.GameSettings.BOARD_HEIGHT; ++i)
                 {
-                    var index = i * HexagonGencerUtils.BOARD_WIDTH + entry.Key;
+                    var index = i * HexagonGencerUtils.GameSettings.BOARD_WIDTH + entry.Key;
                     var cell = _cellList[index];
 
                     if (cell.Item != null)
@@ -156,7 +156,7 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         private void ResetAfterMove()
         {
-            for (int i = 0; i < HexagonGencerUtils.BOARD_WIDTH; ++i)
+            for (int i = 0; i < HexagonGencerUtils.GameSettings.BOARD_WIDTH; ++i)
             {
                 _explodeInfo[i] = 0;
             }
