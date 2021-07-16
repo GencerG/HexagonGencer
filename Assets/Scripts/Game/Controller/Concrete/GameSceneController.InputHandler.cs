@@ -71,14 +71,13 @@ namespace HexagonGencer.Game.Controller.Concrete
 
             _currentTuple = TupleFactory.GetItemTuple(item, (int)corner);
 
-            if (_currentTuple == null)
-                return;
+            if (_currentTuple == null) { return; }
 
             var tuplePosition = GetTuplePosition(_currentTuple);
             var eulerAngles = GetOutlineAngles(corner);
 
             MoveOutline(tuplePosition, eulerAngles);
-            _outline.SetActive(true);
+
             SetTupleParent(_currentTuple, _outline.transform);
             SetTupleSortingOrder(_currentTuple, 1);
 
@@ -93,7 +92,7 @@ namespace HexagonGencer.Game.Controller.Concrete
 
             _isInteractable = false;
 
-            var worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10f));
+            var worldPosition = _mainCam.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10f));
 
             _rotationDirection = worldPosition.x < _outline.transform.position.x ?
                 HexagonGencerUtils.COUNTER_CLOCK_WISE : HexagonGencerUtils.CLOCK_WISE;
@@ -109,7 +108,7 @@ namespace HexagonGencer.Game.Controller.Concrete
 
             _isInteractable = false;
 
-            var worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10f));
+            var worldPosition = _mainCam.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10f));
 
             _rotationDirection = worldPosition.y > _outline.transform.position.y ?
                 HexagonGencerUtils.COUNTER_CLOCK_WISE : HexagonGencerUtils.CLOCK_WISE;
@@ -125,7 +124,7 @@ namespace HexagonGencer.Game.Controller.Concrete
 
             _isInteractable = false;
 
-            var worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10f));
+            var worldPosition = _mainCam.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10f));
 
             _rotationDirection = worldPosition.y < _outline.transform.position.y ?
                 HexagonGencerUtils.COUNTER_CLOCK_WISE : HexagonGencerUtils.CLOCK_WISE;
@@ -141,7 +140,7 @@ namespace HexagonGencer.Game.Controller.Concrete
 
             _isInteractable = false;
 
-            var worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10f));
+            var worldPosition = _mainCam.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10f));
 
             _rotationDirection = worldPosition.x > _outline.transform.position.x ?
                 HexagonGencerUtils.COUNTER_CLOCK_WISE : HexagonGencerUtils.CLOCK_WISE;
@@ -155,6 +154,7 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         private void MoveOutline(Vector3 position, Vector3 eulerAngles)
         {
+            _outline.SetActive(true);
             _outline.transform.position = position;
             _outline.transform.localEulerAngles = eulerAngles;
         }
