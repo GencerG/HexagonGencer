@@ -21,4 +21,10 @@ namespace HexagonGencer.Enums
         Left,
         TopLeft
     }
+
+    public enum ItemType
+    {
+        Bomb,
+        Default
+    }
 }
