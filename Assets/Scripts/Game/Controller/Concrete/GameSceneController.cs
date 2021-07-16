@@ -1,3 +1,5 @@
+using DG.Tweening;
+using HexagonGencer.Enums;
 using HexagonGencer.Factory;
 using HexagonGencer.Game.Controller.Abstract;
 using HexagonGencer.Game.Core.Concrete;
@@ -47,6 +49,7 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         public override void InitializeScene()
         {
+            DOTween.SetTweensCapacity(2000, 200);
             InitializePool();
             InitializeItems();
             InitializeOutline();
@@ -102,6 +105,8 @@ namespace HexagonGencer.Game.Controller.Concrete
             {
                 cell.SetNeighbours(HexagonGencerUtils.GetNeighboursFromCell(cell, _cellList));
             }
+
+            CheckColorMatch();
         }
 
         private void InitializeOutline()
@@ -117,6 +122,33 @@ namespace HexagonGencer.Game.Controller.Concrete
             for (int i = 0; i < HexagonGencerUtils.GameSettings.BOARD_WIDTH; ++i)
             {
                 _explodeInfo.Add(i, 0);
+            }
+        }
+
+        private void CheckColorMatch()
+        {
+            foreach (Cell cell in _cellList)
+            {
+                var avaibleColors = new List<ItemColor>();
+
+                for (int i = 0; i < 7; ++i)
+                {
+                    avaibleColors.Add((ItemColor)i);
+                }
+
+                var neighbours = cell.GetNeighbours();
+
+                foreach (Cell neighbour in neighbours)
+                {
+                    if (neighbour == null)
+                        continue;
+
+                    if (cell.Item.ItemColor == neighbour.Item.ItemColor)
+                    {
+                        avaibleColors.Remove(cell.Item.ItemColor);
+                        cell.Item.SetRandomColor();
+                    }
+                }
             }
         }
 
