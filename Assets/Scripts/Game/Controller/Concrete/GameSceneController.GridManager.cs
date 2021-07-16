@@ -61,6 +61,8 @@ namespace HexagonGencer.Game.Controller.Concrete
                 ResetAfterMove();
                 ResetOutline();
 
+                _gameUIModel.Score.Value += matchables.Count * 10;
+
                 matchables.Clear();
                 _isInteractable = true;
             });

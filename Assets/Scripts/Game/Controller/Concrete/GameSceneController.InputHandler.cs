@@ -188,15 +188,11 @@ namespace HexagonGencer.Game.Controller.Concrete
                     CheckTuples(_currentTuple.Item2.Cell, ref matchables);
                     CheckTuples(_currentTuple.Item3.Cell, ref matchables);
 
-                    foreach (Cell cell in matchables)
-                    {
-                        cell.Execute();
-                    }
-
                     if (matchables.Count >= 3)
                     {
                         rotationSequence.Kill();
                         _onMatch.OnNext(matchables);
+                        _gameUIModel.Moves.Value++;
                     }
                 }));
 
@@ -212,15 +208,11 @@ namespace HexagonGencer.Game.Controller.Concrete
                     CheckTuples(_currentTuple.Item2.Cell, ref matchables);
                     CheckTuples(_currentTuple.Item3.Cell, ref matchables);
 
-                    foreach (Cell cell in matchables)
-                    {
-                        cell.Execute();
-                    }
-
                     if (matchables.Count >= 3)
                     {
                         rotationSequence.Kill();
                         _onMatch.OnNext(matchables);
+                        _gameUIModel.Moves.Value++;
                     }
 
                 }));

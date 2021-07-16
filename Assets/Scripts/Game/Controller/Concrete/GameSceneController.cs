@@ -51,6 +51,7 @@ namespace HexagonGencer.Game.Controller.Concrete
             InitializeDictionary();
             BindInputEvents();
             BindGridManager();
+            BindUIManager();
         }
 
         #endregion
