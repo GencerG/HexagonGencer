@@ -12,6 +12,9 @@ namespace HexagonGencer.Game.Manager
         private GameSceneController _gameSceneController 
             = new GameSceneController();
 
+        private MainMenuSceneController _mainMenuSceneController 
+            = new MainMenuSceneController();
+
         #endregion
 
         #region Unity
@@ -40,6 +43,15 @@ namespace HexagonGencer.Game.Manager
             switch (SceneManager.GetActiveScene().buildIndex)
             {
                 case 0:
+                    _mainMenuSceneController.InitializeScene();
+                    _mainMenuSceneController.ShouldRenderNewScene.Where(newScene => newScene == true)
+                        .Subscribe(_ =>
+                        {
+                            SceneManager.LoadScene(1);
+                        });
+                    break;
+
+                case 1:
                     _gameSceneController.InitializeScene();
                     _gameSceneController.ShouldRenderNewScene.Where(newScene => newScene == true)
                         .Subscribe(_ =>
