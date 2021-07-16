@@ -56,9 +56,6 @@ namespace HexagonGencer.Game.Controller.Concrete
         {
             if (!_isInteractable) { return; }
 
-            SetTupleParent(_previousTuple, _poolContainer.transform);
-            SetTupleSortingOrder(_previousTuple, 0);
-
             var hit = HexagonGencerUtils.RayCast2D(mousePosition);
 
             if (hit.collider == null) { return; }
@@ -71,7 +68,14 @@ namespace HexagonGencer.Game.Controller.Concrete
 
             _currentTuple = TupleFactory.GetItemTuple(item, (int)corner);
 
-            if (_currentTuple == null) { return; }
+            if (_currentTuple == null) 
+            {
+                _currentTuple = _previousTuple;
+                return;
+            }
+
+            SetTupleParent(_previousTuple, _poolContainer.transform);
+            SetTupleSortingOrder(_previousTuple, 0);
 
             var tuplePosition = GetTuplePosition(_currentTuple);
             var eulerAngles = GetOutlineAngles(corner);
