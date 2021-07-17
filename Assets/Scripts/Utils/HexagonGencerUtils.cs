@@ -25,7 +25,7 @@ namespace HexagonGencer.Utils
         public const float ROTATION_ANIMATON_DURATION = .2f;
         public const float x_MUL = 1.9f;
         public const float y_MUL = 2.2f;
-        public const float y_OFFSET_EVEN_ROWS = 1.1F;
+        public const float y_OFFSET_EVEN_ROWS = 1.1f;
 
         public const string LAYER_MASK = "Hexagon";
         public const string COMPONENT_HOLDER_TAG = "ComponentHolder";
