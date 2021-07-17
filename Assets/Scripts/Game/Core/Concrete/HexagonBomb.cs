@@ -1,60 +1,59 @@
-using HexagonGencer.Enums;
-using HexagonGencer.Factory;
-using HexagonGencer.Game.Models.Abstract;
+using HexagonGencer.Game.Core.Abstract;
 using HexagonGencer.Utils;
 using UniRx;
 using UnityEngine;
 
 namespace HexagonGencer.Game.Core.Concrete
 {
-    public class HexagonBomb : MonoBehaviour, IItem
+    public class HexagonBomb : Item
     {
         #region Fields
 
-        [SerializeField]
-        private SpriteRenderer _spriteRenderer;
+        [SerializeField] private TextMesh _countDownText;
 
-        #endregion
+        public int Health;
+        private bool _isJustSpawned = true;
 
-        #region Interface
-                                            
-        public ItemColor ItemColor { get; set; }
+        #endregion                                 
 
-        public Cell Cell { get; set; }
-
-        public IntReactiveProperty SortingOrder { get; set; } = new IntReactiveProperty(0);
-
-        public Transform Transform { get; set; }
-
-        public void Execute()
+        public override bool Execute()
         {
+            if (!_isJustSpawned)
+            {
+                Health--;
+            }
+            else
+            {
+                _isJustSpawned = false;
+            }
 
+            SetText();
+
+            return Health > 0;
         }
-
-        public void SetRandomColor()
-        {
-            var colorIndex = Random.Range(0, HexagonGencerUtils.GameSettings.NUMBER_OF_COLORS);
-
-            ItemColor = (ItemColor)colorIndex;
-
-            _spriteRenderer.color =
-                ColorFactory.GetColor(ItemColor);
-        }
-
-        #endregion
 
         #region Unity
 
         private void OnEnable()
         {
-            this.Transform = transform;
-
+            _isJustSpawned = true;
             transform.rotation = Quaternion.identity;
+        }
+
+        private void Start()
+        {
+            Health = HexagonGencerUtils.BOMB_HEALTH;
+            SetText();
 
             SortingOrder.Subscribe(order =>
             {
-                _spriteRenderer.sortingOrder = order;
+                spriteRenderer.sortingOrder = order;
             });
+        }
+
+        private void SetText()
+        {
+            _countDownText.text = Health.ToString();
         }
 
         #endregion

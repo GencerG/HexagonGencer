@@ -1,23 +1,28 @@
 using HexagonGencer.Factory;
-using HexagonGencer.Game.Models.Abstract;
+using HexagonGencer.Game.Core.Abstract;
 using HexagonGencer.Utils;
 using System.Collections.Generic;
 using UnityEngine;
-
 
 namespace HexagonGencer.Game.Core.Concrete
 {
     public class Cell : MonoBehaviour
     {
+        #region Fields
+
         [SerializeField] private Cell[] _neighbours = new Cell[6];
         [SerializeField] private Cell _cellBelow = null;
-        public IItem Item { get; private set; }
+        public Item Item { get; private set; }
         public int Row;
         public int Column;
         public bool IsAdded = false;
         public int Index => HexagonGencerUtils.GameSettings.BOARD_WIDTH * Row + Column;
 
-        public void UpdateHexagon(IItem newItem)
+        #endregion
+
+        #region Custom Methods
+
+        public void UpdateHexagon(Item newItem)
         {
             Item = newItem;
 
@@ -91,5 +96,17 @@ namespace HexagonGencer.Game.Core.Concrete
         {
             Item.Execute();
         }
+
+        #endregion
+
+        #region Unity
+
+        private void OnDestroy()
+        {
+            if (Item != null)
+                Destroy(Item.gameObject);
+        }
+
+        #endregion
     }
 }
