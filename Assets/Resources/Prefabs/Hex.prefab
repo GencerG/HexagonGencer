@@ -128,8 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bf5799597632ac47b9498d920f7a6dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HexagonColor: 0
-  _spriteRenderer: {fileID: 2227018311864249353}
+  spriteRenderer: {fileID: 2227018311864249353}
 --- !u!1 &8422250087112731307
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,7 +147,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6775327183934063814
 Transform:
   m_ObjectHideFlags: 0
