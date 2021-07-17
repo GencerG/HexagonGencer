@@ -31,7 +31,7 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         public void BindUIManager()
         {
-            var componentHolderInstance = GameObject.FindWithTag("ComponentHolder")
+            var componentHolderInstance = GameObject.FindWithTag(HexagonGencerUtils.COMPONENT_HOLDER_TAG)
                 .GetComponent<ComponentHolder>();
 
             var mainMenupresenter = new MainMenuPresenter
