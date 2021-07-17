@@ -168,10 +168,18 @@ namespace HexagonGencer.Game.Controller.Concrete
                     if (tuple == null) { continue; }
 
                     if (tuple.Item2.ItemColor == tuple.Item3.ItemColor)
+                    {
                         availableColorIndices.Remove((int)tuple.Item2.ItemColor);
+                        
+                        if (availableColorIndices.Count == 0)
+                        {
+                            availableColorIndices.Add(Random.Range(0, HexagonGencerUtils.GameSettings.NUMBER_OF_COLORS));
+                        }
+                    }
                 }
 
-                cell.Item.SetColor((ItemColor)availableColorIndices[Random.Range(0, availableColorIndices.Count)]);
+                var index = availableColorIndices[Random.Range(0, availableColorIndices.Count)];
+                cell.Item.SetColor((ItemColor)index);
             }
         }
 
