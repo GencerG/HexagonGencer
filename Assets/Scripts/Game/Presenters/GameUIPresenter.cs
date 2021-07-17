@@ -1,5 +1,6 @@
 using HexagonGencer.Game.Models.Concrete;
 using UniRx;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace HexagonGencer.Game.Presenters
@@ -17,6 +18,8 @@ namespace HexagonGencer.Game.Presenters
 
         public Text ScoreText;
         public Text MovesText;
+        public Button RestartButton;
+        public Button MainMenuButton;
 
         #endregion
 
@@ -24,21 +27,33 @@ namespace HexagonGencer.Game.Presenters
 
         public GameUIPresenter() { }
 
-        public GameUIPresenter(Text scoreText, Text movesText)
+        public GameUIPresenter(Text scoreText, Text movesText, Button restartButton, Button mainMenuButton)
         {
             ScoreText = scoreText;
             MovesText = movesText;
+            RestartButton = restartButton;
+            MainMenuButton = mainMenuButton;
             BindView();
         }
 
         #endregion
 
-        #region Bind
+        #region Binding
 
         public void BindView()
         {
             Model.Score.SubscribeToText(ScoreText);
             Model.Moves.SubscribeToText(MovesText);
+
+            RestartButton.onClick.AsObservable().Subscribe(_ =>
+            {
+                Model.OnRestartButtonClicked.OnNext(Unit.Default);
+            });
+
+            MainMenuButton.onClick.AsObservable().Subscribe(_ =>
+            {
+                Model.OnMainMenuButtonClicked.OnNext(Unit.Default);
+            });
         }
 
         #endregion
