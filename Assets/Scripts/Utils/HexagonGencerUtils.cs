@@ -17,15 +17,18 @@ namespace HexagonGencer.Utils
 
         #region Constants
 
-        public static readonly float CLOCK_WISE = -120f;
-        public static readonly float COUNTER_CLOCK_WISE = 120f;
-        public const float ROTATION_ANIMATON_DURATION = .2f;
+        public const int BOMB_SPAWN_RATE = 1000;
+        public const int BOMB_HEALTH = 7;
 
+        public const float CLOCK_WISE = -120f;
+        public const float COUNTER_CLOCK_WISE = 120f;
+        public const float ROTATION_ANIMATON_DURATION = .2f;
         public const float x_MUL = 1.9f;
         public const float y_MUL = 2.2f;
         public const float y_OFFSET_EVEN_ROWS = 1.1F;
 
         public const string LAYER_MASK = "Hexagon";
+        public const string COMPONENT_HOLDER_TAG = "ComponentHolder";
 
         #endregion
 
