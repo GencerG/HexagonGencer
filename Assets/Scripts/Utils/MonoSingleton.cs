@@ -30,6 +30,16 @@ namespace HexagonGencer.Utils
         private void Awake()
         {
             _instance = this as T;
+            Initialize();
+        }
+
+        #endregion
+
+        #region Init
+
+        public virtual void Initialize()
+        {
+
         }
 
         #endregion
