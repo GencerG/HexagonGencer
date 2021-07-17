@@ -97,7 +97,7 @@ namespace HexagonGencer.Game.Controller.Concrete
         private void HandleOnPlayButtonClicked(Unit unit)
         {
             InitializeBoard();
-            _mainMenuPanel.SetActive(false);
+            SetActivePanel("");
         }
 
         private void HandleOnWidthChanged(int width)
@@ -122,12 +122,7 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         private void HandleOnMainMenuButtonClicked(Unit unit)
         {
-            DestroyBoard();
-            ObjectPool.Clear();
-            _gameUIModel.Score.Value = 0;
-            _gameUIModel.Moves.Value = 0;
-            _mainMenuPanel.SetActive(true);
-            _gameOverPanel.SetActive(false);
+            BackToMainMenu();
         }
 
         #endregion
@@ -139,9 +134,28 @@ namespace HexagonGencer.Game.Controller.Concrete
             DestroyBoard();
             ObjectPool.Clear();
             InitializeBoard();
+            ResetScore();
+            SetActivePanel("");
+        }
+
+        private void BackToMainMenu()
+        {
+            DestroyBoard();
+            ObjectPool.Clear();
+            ResetScore();
+            SetActivePanel(_mainMenuPanel.transform.name);
+        }
+
+        private void SetActivePanel(string activePanel)
+        {
+            _gameOverPanel.SetActive(activePanel.Equals(_gameOverPanel.name));
+            _mainMenuPanel.SetActive(activePanel.Equals(_mainMenuPanel.name));
+        }
+
+        private void ResetScore()
+        {
             _gameUIModel.Score.Value = 0;
             _gameUIModel.Moves.Value = 0;
-            _gameOverPanel.SetActive(false);
         }
 
         #endregion
