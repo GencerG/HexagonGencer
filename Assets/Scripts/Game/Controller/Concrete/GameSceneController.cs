@@ -1,81 +1,98 @@
 using DG.Tweening;
 using HexagonGencer.Enums;
 using HexagonGencer.Factory;
-using HexagonGencer.Game.Controller.Abstract;
+using HexagonGencer.Game.Core.Abstract;
 using HexagonGencer.Game.Core.Concrete;
-using HexagonGencer.Game.Models.Abstract;
 using HexagonGencer.Game.Models.Concrete;
 using HexagonGencer.Utils;
 using System;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace HexagonGencer.Game.Controller.Concrete
 {
-    public partial class GameSceneController : SceneController
+    public partial class GameSceneController : MonoBehaviour
     {
         #region Fields
 
-        private ObjectPool _objectPool;
-
+        private GameObject _hexagonPrefab;
+        private GameObject _bombPrefab;
         private GameObject _poolContainer;
         private GameObject _outline;
 
         private Camera _mainCam;
 
-        private readonly List<Cell> _cellList 
+        private readonly List<Cell> _cellList
             = new List<Cell>();
 
-        private Dictionary<int, int> _explodeInfo 
+        private readonly List<GameObject> _bombList
+            = new List<GameObject>();
+
+        private Dictionary<int, int> _explodeInfo
             = new Dictionary<int, int>();
+
+        private CompositeDisposable _disposables = new CompositeDisposable();
+
 
         #endregion
 
         #region Subjects
 
-        private Subject<Tuple<IItem, IItem, IItem>> _onStartRotating 
-            = new Subject<Tuple<IItem, IItem, IItem>>();
+        private Subject<Tuple<Item, Item, Item>> _onStartRotating
+            = new Subject<Tuple<Item, Item, Item>>();
 
-        private Subject<List<Cell>> _onMatch 
+        private Subject<List<Cell>> _onMatch
             = new Subject<List<Cell>>();
 
         #endregion
 
-        #region Scene Controller
+        #region Unity
 
-        public override BoolReactiveProperty ShouldRenderNewScene { get; set; }
-            = new BoolReactiveProperty(false);
-
-        public override void InitializeScene()
+        private void Start()
         {
             DOTween.SetTweensCapacity(2000, 200);
-            InitializePool();
-            InitializeItems();
-            InitializeOutline();
-            InitializeDictionary();
             BindInputEvents();
             BindGridManager();
             BindUIManager();
-            SetCameraBounds();
+        }
+
+        private void OnDestroy()
+        {
+            DisposeAll();
         }
 
         #endregion
 
         #region Custom Methods
 
-        private void InitializePool()
+        private void InitializeBoard()
         {
-            var prefab = AssetFactory
-                .GetAsset(GameObjectAssetModel.HexagonPrefab);
-
-            _poolContainer = GameObject.Find("PoolContainer");
-            _objectPool = new ObjectPool(prefab, _poolContainer.transform);
-            _objectPool.InstantiatePool();
+            InitializePool();
+            InitializeItems();
+            InitializeOutline();
+            InitializeDictionary();
+            SetCameraBounds();
         }
 
-        private void InitializeItems()
+        public void InitializePool()
         {
+            _hexagonPrefab = AssetFactory
+                .GetAsset(GameObjectAssetModel.HexagonPrefab);
+
+            _bombPrefab = AssetFactory
+                .GetAsset(GameObjectAssetModel.HexagonBomb);
+
+            _poolContainer = GameObject.Find("PoolContainer");
+
+            ObjectPool.PreLoadInstances(_hexagonPrefab, 500, _poolContainer.transform);
+            ObjectPool.PreLoadInstances(_bombPrefab, 10, _poolContainer.transform);
+        }
+
+        public void InitializeItems()
+        {
+
             for (int i = 0; i < HexagonGencerUtils.GameSettings.BOARD_HEIGHT; ++i)
             {
                 for (int j = 0; j < HexagonGencerUtils.GameSettings.BOARD_WIDTH; ++j)
@@ -88,16 +105,15 @@ namespace HexagonGencer.Game.Controller.Concrete
                     if (!cellObjectInstance.TryGetComponent<Cell>(out Cell cellInstance)) return;
                     _cellList.Add(cellInstance);
 
-                    var hexInstance = _objectPool.GetFromPool();
+                    var hexInstance = ObjectPool.GetInstance(_hexagonPrefab);
                     hexInstance.transform.position = cellObjectInstance.transform.position;
 
-                    if (!hexInstance.TryGetComponent<IItem>(out IItem item)) return;
+                    if (!hexInstance.TryGetComponent<Item>(out Item item)) return;
                     cellInstance.UpdateHexagon(item);
                     item.SetRandomColor();
                     cellInstance.Row = i;
                     cellInstance.Column = j;
                     cellInstance.transform.name = cellInstance.Index.ToString();
-                    hexInstance.transform.GetChild(0).GetComponent<TextMesh>().text = cellInstance.Index.ToString();
                 }
             }
 
@@ -107,9 +123,14 @@ namespace HexagonGencer.Game.Controller.Concrete
             }
 
             CheckColorMatch();
+
+            if (!CheckAvailableMoves())
+            {
+                RestartLevel();
+            }
         }
 
-        private void InitializeOutline()
+        public void InitializeOutline()
         {
             _outline = GameObject.Instantiate(AssetFactory
                 .GetAsset(GameObjectAssetModel.OutlinePrefab));
@@ -117,11 +138,15 @@ namespace HexagonGencer.Game.Controller.Concrete
             _outline.SetActive(false);
         }
 
-        private void InitializeDictionary()
+        public void InitializeDictionary()
         {
             for (int i = 0; i < HexagonGencerUtils.GameSettings.BOARD_WIDTH; ++i)
             {
-                _explodeInfo.Add(i, 0);
+                if (!_explodeInfo.ContainsKey(i))
+                    _explodeInfo.Add(i, 0);
+
+                else
+                    _explodeInfo[i] = 0;
             }
         }
 
@@ -129,30 +154,28 @@ namespace HexagonGencer.Game.Controller.Concrete
         {
             foreach (Cell cell in _cellList)
             {
-                var avaibleColors = new List<ItemColor>();
+                var availableColorIndices = new List<int>();
 
-                for (int i = 0; i < 7; ++i)
+                for (int i = 0; i < HexagonGencerUtils.GameSettings.NUMBER_OF_COLORS; ++i)
                 {
-                    avaibleColors.Add((ItemColor)i);
+                    availableColorIndices.Add(i);
                 }
 
-                var neighbours = cell.GetNeighbours();
-
-                foreach (Cell neighbour in neighbours)
+                for (int i = 0; i < 6; ++i)
                 {
-                    if (neighbour == null)
-                        continue;
+                    var tuple = TupleFactory.GetItemTuple(cell.Item, i);
 
-                    if (cell.Item.ItemColor == neighbour.Item.ItemColor)
-                    {
-                        avaibleColors.Remove(cell.Item.ItemColor);
-                        cell.Item.SetRandomColor();
-                    }
+                    if (tuple == null) { continue; }
+
+                    if (tuple.Item2.ItemColor == tuple.Item3.ItemColor)
+                        availableColorIndices.Remove((int)tuple.Item2.ItemColor);
                 }
+
+                cell.Item.SetColor((ItemColor)availableColorIndices[Random.Range(0, availableColorIndices.Count)]);
             }
         }
 
-        private void SetCameraBounds()
+        public void SetCameraBounds()
         {
             _mainCam = Camera.main;
 
@@ -165,7 +188,17 @@ namespace HexagonGencer.Game.Controller.Concrete
             position.z = _mainCam.transform.position.z;
 
             _mainCam.transform.position = position;
-            _mainCam.orthographicSize = upperCenter.y;
+
+            if (HexagonGencerUtils.GameSettings.BOARD_HEIGHT > HexagonGencerUtils.GameSettings.BOARD_WIDTH)
+                _mainCam.orthographicSize = upperCenter.y;
+
+            else
+                _mainCam.orthographicSize = position.x + (1.5f * HexagonGencerUtils.GameSettings.BOARD_WIDTH);
+        }
+
+        public void DisposeAll()
+        {
+            _disposables.Dispose();
         }
 
         #endregion

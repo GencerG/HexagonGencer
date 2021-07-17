@@ -1,8 +1,8 @@
 using DG.Tweening;
 using HexagonGencer.Enums;
 using HexagonGencer.Factory;
+using HexagonGencer.Game.Core.Abstract;
 using HexagonGencer.Game.Core.Concrete;
-using HexagonGencer.Game.Models.Abstract;
 using HexagonGencer.Utils;
 using System;
 using System.Collections.Generic;
@@ -16,16 +16,17 @@ namespace HexagonGencer.Game.Controller.Concrete
         #region Fields
 
         private bool _isInteractable = true;
-        private Tuple<IItem, IItem, IItem> _previousTuple, _currentTuple = null;
+        private Tuple<Item, Item, Item> _previousTuple, _currentTuple = null;
         private float _rotationDirection;
 
         #endregion
 
         #region Bindings
 
-        private void BindInputEvents()
+        public void BindInputEvents()
         {
-            var inputObserver = GameObject.FindObjectOfType<InputObserver>();
+            var inputObserver = GameObject.FindWithTag("InputObserver")
+                .GetComponent<InputObserver>();
 
             inputObserver
                 .OnClick
@@ -62,13 +63,13 @@ namespace HexagonGencer.Game.Controller.Concrete
 
             var hexInstance = hit.transform;
 
-            if (!hexInstance.TryGetComponent<IItem>(out IItem item)) { return; }
+            if (!hexInstance.TryGetComponent<Item>(out Item item)) { return; }
 
             var corner = HexagonGencerUtils.GetHexCorner(hexInstance.position, hit.point);
 
             _currentTuple = TupleFactory.GetItemTuple(item, (int)corner);
 
-            if (_currentTuple == null) 
+            if (_currentTuple == null)
             {
                 _currentTuple = _previousTuple;
                 return;
@@ -101,7 +102,7 @@ namespace HexagonGencer.Game.Controller.Concrete
             _rotationDirection = worldPosition.x < _outline.transform.position.x ?
                 HexagonGencerUtils.COUNTER_CLOCK_WISE : HexagonGencerUtils.CLOCK_WISE;
 
-            RotationTween(_outline.transform, _rotationDirection);
+            RotationSequence(_outline.transform, _rotationDirection);
         }
 
         private void HandleOnSwipeLeft(Vector2 mousePosition)
@@ -117,7 +118,7 @@ namespace HexagonGencer.Game.Controller.Concrete
             _rotationDirection = worldPosition.y > _outline.transform.position.y ?
                 HexagonGencerUtils.COUNTER_CLOCK_WISE : HexagonGencerUtils.CLOCK_WISE;
 
-            RotationTween(_outline.transform, _rotationDirection);
+            RotationSequence(_outline.transform, _rotationDirection);
         }
 
         private void HandleOnSwipeRight(Vector2 mousePosition)
@@ -133,7 +134,7 @@ namespace HexagonGencer.Game.Controller.Concrete
             _rotationDirection = worldPosition.y < _outline.transform.position.y ?
                 HexagonGencerUtils.COUNTER_CLOCK_WISE : HexagonGencerUtils.CLOCK_WISE;
 
-            RotationTween(_outline.transform, _rotationDirection);
+            RotationSequence(_outline.transform, _rotationDirection);
         }
 
         private void HandleOnSwipeUp(Vector2 mousePosition)
@@ -149,7 +150,7 @@ namespace HexagonGencer.Game.Controller.Concrete
             _rotationDirection = worldPosition.x > _outline.transform.position.x ?
                 HexagonGencerUtils.COUNTER_CLOCK_WISE : HexagonGencerUtils.CLOCK_WISE;
 
-            RotationTween(_outline.transform, _rotationDirection);
+            RotationSequence(_outline.transform, _rotationDirection);
         }
 
         #endregion
@@ -174,7 +175,7 @@ namespace HexagonGencer.Game.Controller.Concrete
                 return Vector3.zero;
         }
 
-        private void RotationTween(Transform objectToRotate, float angle)
+        private void RotationSequence(Transform objectToRotate, float angle)
         {
             var eulerAngles = objectToRotate.transform.localEulerAngles;
 
@@ -196,7 +197,7 @@ namespace HexagonGencer.Game.Controller.Concrete
                     {
                         rotationSequence.Kill();
                         _onMatch.OnNext(matchables);
-                        _gameUIModel.Moves.Value++;
+                        StartCoroutine(ChainRoutine());
                     }
                 }));
 
@@ -216,7 +217,7 @@ namespace HexagonGencer.Game.Controller.Concrete
                     {
                         rotationSequence.Kill();
                         _onMatch.OnNext(matchables);
-                        _gameUIModel.Moves.Value++;
+                        StartCoroutine(ChainRoutine());
                     }
 
                 }));

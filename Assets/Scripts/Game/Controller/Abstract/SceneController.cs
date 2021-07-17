@@ -7,6 +7,7 @@ namespace HexagonGencer.Game.Controller.Abstract
         #region Fields
 
         public abstract BoolReactiveProperty ShouldRenderNewScene { get; set; }
+        public abstract BoolReactiveProperty ShouldRestartScene { get; set; }
 
         #endregion
 
