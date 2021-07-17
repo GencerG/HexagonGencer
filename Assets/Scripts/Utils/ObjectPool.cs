@@ -3,58 +3,100 @@ using UnityEngine;
 
 namespace HexagonGencer.Utils
 {
-    public class ObjectPool
+    public static class ObjectPool
     {
-        #region Fields
 
-        private GameObject _prefab;
-        private Transform _poolContainer;
+        private static Dictionary<string, List<GameObject>> pool = new Dictionary<string, List<GameObject>>();
+        private const string instancesOptionalNameEnding = "(Pool)";
 
-        private Queue<GameObject> _availableObjects = new Queue<GameObject>();
-
-        #endregion
-
-        #region Constructer
-
-        public ObjectPool() { }
-
-        public ObjectPool(GameObject prefab, Transform poolContainer)
+        public static void PreLoadInstances(GameObject prefab, int number, Transform parent = null)
         {
-            this._prefab = prefab;
-            this._poolContainer = poolContainer;
-        }
-
-        #endregion
-
-        #region Custom Methods
-
-        public void InstantiatePool()
-        {
-            for (int i = 0; i < 120; i++)
+            GameObject prefabInstance;
+            bool setParent = parent != null;
+            for (int i = 0; i < number; ++i)
             {
-                var objectInstance = GameObject.Instantiate(_prefab);
-                objectInstance.transform.SetParent(_poolContainer);
-                AddToPool(objectInstance);
+                prefabInstance = Instantiate(prefab);
+                if (setParent)
+                    prefabInstance.transform.SetParent(parent);
+
+                StoreInstance(prefabInstance);
             }
         }
 
-        public void AddToPool(GameObject instance)
+        public static GameObject GetInstance(GameObject prefab, Transform parent = null)
         {
-            instance.SetActive(false);
-            _availableObjects.Enqueue(instance);
+            GameObject prefabInstance = GetInstanceFromPool(prefab);
+            if (prefabInstance == null)
+            {
+                prefabInstance = Instantiate(prefab);
+            }
+
+            GameObject gameObjectInstance = prefabInstance.gameObject;
+            gameObjectInstance.SetActive(true);
+
+            if (parent != null)
+                gameObjectInstance.transform.SetParent(parent);
+
+            return gameObjectInstance;
         }
 
-        public GameObject GetFromPool()
+        public static void StoreInstance(GameObject gameObjectInstance)
         {
-            if (_availableObjects.Count == 0)
-                InstantiatePool();
+            gameObjectInstance.gameObject.SetActive(false);
+            List<GameObject> instancesList;
 
-            var instance = _availableObjects.Dequeue();
-            instance.SetActive(true);
-            return instance;
+            if (pool.TryGetValue(gameObjectInstance.name, out instancesList))
+            {
+                instancesList.Add(gameObjectInstance);
+            }
+            else
+            {
+                instancesList = new List<GameObject>();
+                instancesList.Add(gameObjectInstance);
+                pool.Add(gameObjectInstance.name, instancesList);
+            }
         }
 
-        #endregion
+        public static void Clear()
+        {
+            
+            foreach(KeyValuePair<string, List<GameObject>> entry in pool)
+            {
+                foreach(GameObject obj in entry.Value)
+                {
+                    GameObject.Destroy(obj);
+                }
+            }
+            
+            pool.Clear();
+        }
+
+        private static GameObject GetInstanceFromPool(GameObject prefab)
+        {
+            GameObject prefabInstance = null;
+            List<GameObject> instancesList;
+            if (pool.TryGetValue(GeneratePrefabInstancesName(prefab), out instancesList))
+            {
+                if (instancesList.Count != 0)
+                {
+                    prefabInstance = instancesList[0];
+                    instancesList.RemoveAt(0);
+                }
+            }
+
+            return prefabInstance;
+        }
+
+        private static GameObject Instantiate(GameObject prefab)
+        {
+            GameObject prefabInstance = Object.Instantiate(prefab);
+            prefabInstance.name = GeneratePrefabInstancesName(prefab);
+            return prefabInstance;
+        }
+
+        private static string GeneratePrefabInstancesName(GameObject prefab)
+        {
+            return prefab.name + prefab.GetInstanceID() + instancesOptionalNameEnding;
+        }
     }
-
 }
