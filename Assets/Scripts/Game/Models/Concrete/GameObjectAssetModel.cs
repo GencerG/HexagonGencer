@@ -39,7 +39,7 @@ namespace HexagonGencer.Game.Models.Concrete
         {
             get
             {
-                return new GameObjectAssetModel("Prefabs/HexagonBomb");
+                return new GameObjectAssetModel("Prefabs/Bomb");
             }
         }
     }
