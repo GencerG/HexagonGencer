@@ -27,7 +27,7 @@ namespace HexagonGencer.Game.Controller.Concrete
         public void BindGridManager()
         {
             // Start hexagon bomb cooldown
-            _nextBomb += HexagonGencerUtils.BOMB_SPAWN_RATE;
+            _nextBomb += HexagonGencerUtils.BOMB_SPAWN_PERIOD;
 
             _onStartRotating.Subscribe(tuple =>
             {
@@ -80,7 +80,7 @@ namespace HexagonGencer.Game.Controller.Concrete
                 ResetAfterMove();
                 ResetOutline();
 
-                _gameUIModel.Score.Value += matchables.Count * 10;
+                _gameUIModel.Score.Value += matchables.Count * HexagonGencerUtils.SCORE_MULTIPLIER;
 
                 matchables.Clear();
             }).AddTo(_disposables);
@@ -155,7 +155,7 @@ namespace HexagonGencer.Game.Controller.Concrete
                     // Check bomb cooldown
                     if (_gameUIModel.Score.Value >= _nextBomb)
                     {
-                        _nextBomb += HexagonGencerUtils.BOMB_SPAWN_RATE;
+                        _nextBomb += HexagonGencerUtils.BOMB_SPAWN_PERIOD;
                         hexagonInstance = ObjectPool.GetInstance(_bombPrefab);
                         _bombList.Add(hexagonInstance);
                     }

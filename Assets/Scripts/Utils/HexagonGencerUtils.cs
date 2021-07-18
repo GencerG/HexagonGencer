@@ -17,8 +17,9 @@ namespace HexagonGencer.Utils
 
         #region Constants
 
-        public const int BOMB_SPAWN_RATE = 1000;
+        public const int BOMB_SPAWN_PERIOD = 1000;
         public const int BOMB_HEALTH = 7;
+        public const int SCORE_MULTIPLIER = 5;
 
         public const float CLOCK_WISE = -120f;
         public const float COUNTER_CLOCK_WISE = 120f;
