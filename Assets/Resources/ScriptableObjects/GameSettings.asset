@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   _boardWidth: 8
-  _boardHeight: 9
-  _numberOfColors: 5
+  _boardHeight: 11
+  _numberOfColors: 4
