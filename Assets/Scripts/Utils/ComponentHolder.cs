@@ -1,4 +1,3 @@
-using HexagonGencer.Utils;
 using UnityEngine.UI;
 using UnityEngine;
 
@@ -12,6 +11,7 @@ public class ComponentHolder : MonoBehaviour
     public Button BackButton;
     public Button PlayButton;
     public Button SettingsButton;
+    public Button BackToMenuButton;
     [Space(10)]
     public Slider WidthSlider;
     public Slider HeightSlider;

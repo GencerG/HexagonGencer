@@ -9,5 +9,6 @@ namespace HexagonGencer.Game.Models.Concrete
 
         public Subject<Unit> OnRestartButtonClicked = new Subject<Unit>();
         public Subject<Unit> OnMainMenuButtonClicked = new Subject<Unit>();
+        public Subject<Unit> OnBackToMenuButtonClicked = new Subject<Unit>();
     }
 }

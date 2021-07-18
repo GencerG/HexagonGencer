@@ -24,6 +24,7 @@ namespace HexagonGencer.Game.Controller.Concrete
         private GameObject _gameOverPanel;
         private GameObject _mainMenuPanel;
         private GameObject _settingsPanel;
+        private GameObject _backToMenuButton;
 
         #endregion
 
@@ -67,6 +68,7 @@ namespace HexagonGencer.Game.Controller.Concrete
                 MovesText = componentHolderInstance.MovesText,
                 RestartButton = componentHolderInstance.RestartButton,
                 MainMenuButton = componentHolderInstance.MainMenuButton,
+                BackToMenuButton = componentHolderInstance.BackToMenuButton,
                 Model = _gameUIModel,
             };
 
@@ -74,10 +76,12 @@ namespace HexagonGencer.Game.Controller.Concrete
 
             _gameUIModel.OnMainMenuButtonClicked.Subscribe(HandleOnMainMenuButtonClicked);
             _gameUIModel.OnRestartButtonClicked.Subscribe(HandleOnRestartButtonClicked);
+            _gameUIModel.OnBackToMenuButtonClicked.Subscribe(HandleOnMainMenuButtonClicked);
 
             _settingsPanel = componentHolderInstance.SettingsPanel;
             _mainMenuPanel = componentHolderInstance.MainMenuPanel;
             _gameOverPanel = componentHolderInstance.GameOverPanel;
+            _backToMenuButton = componentHolderInstance.BackToMenuButton.gameObject;
         }
 
         #endregion
@@ -97,7 +101,7 @@ namespace HexagonGencer.Game.Controller.Concrete
         private void HandleOnPlayButtonClicked(Unit unit)
         {
             InitializeBoard();
-            SetActivePanel("");
+            SetActivePanel(_backToMenuButton.transform.name);
         }
 
         private void HandleOnWidthChanged(int width)
@@ -135,7 +139,7 @@ namespace HexagonGencer.Game.Controller.Concrete
             ObjectPool.Clear();
             InitializeBoard();
             ResetScore();
-            SetActivePanel("");
+            SetActivePanel(_backToMenuButton.transform.name);
         }
 
         private void BackToMainMenu()
@@ -150,6 +154,7 @@ namespace HexagonGencer.Game.Controller.Concrete
         {
             _gameOverPanel.SetActive(activePanel.Equals(_gameOverPanel.name));
             _mainMenuPanel.SetActive(activePanel.Equals(_mainMenuPanel.name));
+            _backToMenuButton.SetActive(activePanel.Equals(_backToMenuButton.name));
         }
 
         private void ResetScore()

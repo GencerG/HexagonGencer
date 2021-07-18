@@ -20,6 +20,7 @@ namespace HexagonGencer.Game.Presenters
         public Text MovesText;
         public Button RestartButton;
         public Button MainMenuButton;
+        public Button BackToMenuButton;
 
         #endregion
 
@@ -27,12 +28,13 @@ namespace HexagonGencer.Game.Presenters
 
         public GameUIPresenter() { }
 
-        public GameUIPresenter(Text scoreText, Text movesText, Button restartButton, Button mainMenuButton)
+        public GameUIPresenter(Text scoreText, Text movesText, Button restartButton, Button mainMenuButton, Button backToMenu)
         {
             ScoreText = scoreText;
             MovesText = movesText;
             RestartButton = restartButton;
             MainMenuButton = mainMenuButton;
+            BackToMenuButton = backToMenu;
             BindView();
         }
 
@@ -53,6 +55,11 @@ namespace HexagonGencer.Game.Presenters
             MainMenuButton.onClick.AsObservable().Subscribe(_ =>
             {
                 Model.OnMainMenuButtonClicked.OnNext(Unit.Default);
+            });
+
+            BackToMenuButton.onClick.AsObservable().Subscribe(_ =>
+            {
+                Model.OnBackToMenuButtonClicked.OnNext(Unit.Default);
             });
         }
 

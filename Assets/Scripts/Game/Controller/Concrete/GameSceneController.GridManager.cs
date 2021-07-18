@@ -203,12 +203,12 @@ namespace HexagonGencer.Game.Controller.Concrete
             foreach(GameObject bomb in _bombList)
             {
                 if (!bomb.GetComponent<Item>().Execute())
-                    _gameOverPanel.SetActive(true);
+                    SetActivePanel(_gameOverPanel.transform.name);
             }
 
             if(!CheckAvailableMoves())
             {
-                _gameOverPanel.SetActive(true);
+                SetActivePanel(_gameOverPanel.transform.name);
             }
 
             yield return null;

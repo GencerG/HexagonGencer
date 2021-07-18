@@ -138,6 +138,9 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         public void InitializeOutline()
         {
+            if (_outline != null)
+                Destroy(_outline);
+
             _outline = GameObject.Instantiate(AssetFactory
                 .GetAsset(GameObjectAssetModel.OutlinePrefab));
 
@@ -188,7 +191,9 @@ namespace HexagonGencer.Game.Controller.Concrete
                         
                         if (availableColorIndices.Count == 0)
                         {
-                            availableColorIndices.Add(Random.Range(0, HexagonGencerUtils.GameSettings.NUMBER_OF_COLORS));
+                            RestartLevel();
+                            Debug.Log("restarting");
+                            return;
                         }
                     }
                 }
