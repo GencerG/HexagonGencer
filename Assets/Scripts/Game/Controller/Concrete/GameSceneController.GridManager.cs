@@ -195,8 +195,6 @@ namespace HexagonGencer.Game.Controller.Concrete
                 yield return new WaitForEndOfFrame();
             }
 
-            Debug.Log("End of Chain..");
-
             _isInteractable = true;
             _gameUIModel.Moves.Value++;
 

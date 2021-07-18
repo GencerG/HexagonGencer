@@ -138,9 +138,11 @@ namespace HexagonGencer.Game.Controller.Concrete
         {
             DestroyBoard();
             ObjectPool.Clear();
+            DOTween.Clear();
             InitializeBoard();
             ResetScore();
             SetActivePanel(_backToMenuButton.transform.name);
+            StopCoroutine(ChainRoutine());
             _isInteractable = true;
         }
 
@@ -150,6 +152,8 @@ namespace HexagonGencer.Game.Controller.Concrete
             ObjectPool.Clear();
             ResetScore();
             SetActivePanel(_mainMenuPanel.transform.name);
+            DOTween.Clear();
+            StopCoroutine(ChainRoutine());
             _isInteractable = true;
         }
 

@@ -52,7 +52,6 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         private void Start()
         {
-            DOTween.SetTweensCapacity(2000, 200);
             BindInputEvents();
             BindGridManager();
             BindUIManager();
@@ -69,11 +68,13 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         private void InitializeBoard()
         {
+            DOTween.SetTweensCapacity(2000, 200);
             InitializePool();
             InitializeItems();
             InitializeOutline();
             InitializeDictionary();
             SetCameraBounds();
+            _moveCounter = 0;
         }
 
         public void InitializePool()
@@ -192,7 +193,6 @@ namespace HexagonGencer.Game.Controller.Concrete
                         if (availableColorIndices.Count == 0)
                         {
                             RestartLevel();
-                            Debug.Log("restarting");
                             return;
                         }
                     }
