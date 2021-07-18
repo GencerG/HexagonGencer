@@ -90,9 +90,12 @@ namespace HexagonGencer.Game.Controller.Concrete
             ObjectPool.PreLoadInstances(_bombPrefab, 10, _poolContainer.transform);
         }
 
+        /// <summary>
+        /// This function initializes cells and hexagons
+        /// </summary>
         public void InitializeItems()
         {
-
+            // Spawn cells and hexagons
             for (int i = 0; i < HexagonGencerUtils.GameSettings.BOARD_HEIGHT; ++i)
             {
                 for (int j = 0; j < HexagonGencerUtils.GameSettings.BOARD_WIDTH; ++j)
@@ -117,13 +120,16 @@ namespace HexagonGencer.Game.Controller.Concrete
                 }
             }
 
+            // Assign nighbours
             foreach (Cell cell in _cellList)
             {
                 cell.SetNeighbours(HexagonGencerUtils.GetNeighboursFromCell(cell, _cellList));
             }
 
+            // Check if color match occured
             CheckColorMatch();
 
+            // If there is no move availabe, restart
             if (!CheckAvailableMoves())
             {
                 RestartLevel();
@@ -138,6 +144,9 @@ namespace HexagonGencer.Game.Controller.Concrete
             _outline.SetActive(false);
         }
 
+        /// <summary>
+        /// Initialize info dictionary which contains explosion data in specific column
+        /// </summary>
         public void InitializeDictionary()
         {
             for (int i = 0; i < HexagonGencerUtils.GameSettings.BOARD_WIDTH; ++i)
@@ -150,6 +159,12 @@ namespace HexagonGencer.Game.Controller.Concrete
             }
         }
 
+        /// <summary>
+        /// This function creates available color list,
+        /// checks all tuples on a cell, if there is color match,
+        /// removes that color from list,
+        /// assigns new color
+        /// </summary>
         private void CheckColorMatch()
         {
             foreach (Cell cell in _cellList)
@@ -183,6 +198,12 @@ namespace HexagonGencer.Game.Controller.Concrete
             }
         }
 
+        /// <summary>
+        /// This function sets camera properties according to board size,
+        /// finds top-middle and bottom middle cells,
+        /// calculates to average position,
+        /// puts camera on that posiiton
+        /// </summary>
         public void SetCameraBounds()
         {
             _mainCam = Camera.main;
@@ -204,6 +225,9 @@ namespace HexagonGencer.Game.Controller.Concrete
                 _mainCam.orthographicSize = position.x + (1.5f * HexagonGencerUtils.GameSettings.BOARD_WIDTH);
         }
 
+        /// <summary>
+        /// Dispose all diposables
+        /// </summary>
         public void DisposeAll()
         {
             _disposables.Dispose();

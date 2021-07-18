@@ -22,7 +22,6 @@ namespace HexagonGencer.Game.Controller.Concrete
         #endregion
 
         #region Bindings
-
         public void BindInputEvents()
         {
             var inputObserver = GameObject.FindWithTag("InputObserver")
@@ -53,6 +52,16 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         #region Handles
 
+        /// <summary>
+        /// This function raycasts from touch position,
+        /// checks for a hit if there is one,
+        /// calculates corner and creates tuple from that corner,
+        /// moves outline to tuple position,
+        /// and sets tuple parents to outline
+        /// </summary>
+        /// <param name="mousePosition">
+        /// Touch position on screen
+        /// </param>
         private void HandleOnClick(Vector2 mousePosition)
         {
             if (!_isInteractable) { return; }
@@ -89,6 +98,14 @@ namespace HexagonGencer.Game.Controller.Concrete
             _previousTuple = _currentTuple;
         }
 
+        /// <summary>
+        /// This function rotates tuple,
+        /// calculates rotation direction
+        /// relative to the touch position
+        /// </summary>
+        /// <param name="mousePosition">
+        /// Touch position on screen
+        /// </param>
         private void HandleOnSwipeDown(Vector2 mousePosition)
         {
             if (!_isInteractable) { return; }
@@ -105,6 +122,14 @@ namespace HexagonGencer.Game.Controller.Concrete
             RotationSequence(_outline.transform, _rotationDirection);
         }
 
+        /// <summary>
+        /// This function rotates tuple,
+        /// calculates rotation direction
+        /// relative to the touch position
+        /// </summary>
+        /// <param name="mousePosition">
+        /// Touch position on screen
+        /// </param>
         private void HandleOnSwipeLeft(Vector2 mousePosition)
         {
             if (!_isInteractable) { return; }
@@ -121,6 +146,14 @@ namespace HexagonGencer.Game.Controller.Concrete
             RotationSequence(_outline.transform, _rotationDirection);
         }
 
+        /// <summary>
+        /// This function rotates tuple,
+        /// calculates rotation direction
+        /// relative to the touch position
+        /// </summary>
+        /// <param name="mousePosition">
+        /// Touch position on screen
+        /// </param>
         private void HandleOnSwipeRight(Vector2 mousePosition)
         {
             if (!_isInteractable) { return; }
@@ -137,6 +170,14 @@ namespace HexagonGencer.Game.Controller.Concrete
             RotationSequence(_outline.transform, _rotationDirection);
         }
 
+        /// <summary>
+        /// This function rotates tuple,
+        /// calculates rotation direction
+        /// relative to the touch position
+        /// </summary>
+        /// <param name="mousePosition">
+        /// Touch position on screen
+        /// </param>
         private void HandleOnSwipeUp(Vector2 mousePosition)
         {
             if (!_isInteractable) { return; }

@@ -21,18 +21,24 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         #region Binding
 
+        /// <summary>
+        /// This functions subscribes match and rotation subjects on start,
+        /// </summary>
         public void BindGridManager()
         {
+            // Start hexagon bomb cooldown
             _nextBomb += HexagonGencerUtils.BOMB_SPAWN_RATE;
 
             _onStartRotating.Subscribe(tuple =>
             {
+                // Get cells from tuple
                 var cell1 = tuple.Item1.Cell;
                 var cell2 = tuple.Item2.Cell;
                 var cell3 = tuple.Item3.Cell;
 
                 if (_rotationDirection == HexagonGencerUtils.CLOCK_WISE)
                 {
+                    // When rotation occurs, change items on cells
                     cell1.UpdateHexagon(tuple.Item3);
                     cell2.UpdateHexagon(tuple.Item1);
                     cell3.UpdateHexagon(tuple.Item2);
@@ -48,6 +54,9 @@ namespace HexagonGencer.Game.Controller.Concrete
 
             _onMatch.Subscribe(matchables =>
             {
+                // When matching occurs, add matching hexagons to pool
+                // Remove bomb if there is any
+                // Update explosion dictionary
                 foreach (Cell cell in matchables)
                 {
                     var hexagon = cell.Item;
@@ -81,6 +90,12 @@ namespace HexagonGencer.Game.Controller.Concrete
 
         #region Custom Methods
 
+        /// <summary>
+        /// This function loops through entire explosion dictionary,
+        /// find target cells for each hexagon in column,
+        /// moves hexgons to their targets,
+        /// updates cell's items
+        /// </summary>
         private void FallHexes()
         {
             foreach (KeyValuePair<int, int> entry in _explodeInfo)
@@ -119,6 +134,13 @@ namespace HexagonGencer.Game.Controller.Concrete
             }
         }
 
+        /// <summary>
+        /// This function loops through entire explosion dictionary,
+        /// creates as many hexagons as the number of explosion in specified column,
+        /// calculates the target cell for new hexagons,
+        /// moves new hexagons to their target cells,
+        /// updates cell's items
+        /// </summary>
         private void SpawnNewHexes()
         {
             foreach (KeyValuePair<int, int> entry in _explodeInfo)
@@ -130,6 +152,7 @@ namespace HexagonGencer.Game.Controller.Concrete
 
                     GameObject hexagonInstance;
 
+                    // Check bomb cooldown
                     if (_gameUIModel.Score.Value >= _nextBomb)
                     {
                         _nextBomb += HexagonGencerUtils.BOMB_SPAWN_RATE;
@@ -160,6 +183,11 @@ namespace HexagonGencer.Game.Controller.Concrete
             }
         }
 
+        /// <summary>
+        /// This function waits for all explosions and movements to complete
+        /// and executes corresponding function
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator ChainRoutine()
         {
             while(_moveCounter > 0)
@@ -185,7 +213,14 @@ namespace HexagonGencer.Game.Controller.Concrete
 
             yield return null;
         }
-
+        
+        /// <summary>
+        /// This function simulates rotation,
+        /// checks if there are moves that can be made
+        /// </summary>
+        /// <returns>
+        /// True, if there is a move
+        /// </returns>
         private bool CheckAvailableMoves()
         {
             foreach (Cell cell in _cellList)
@@ -233,6 +268,9 @@ namespace HexagonGencer.Game.Controller.Concrete
             return false;
         }
 
+        /// <summary>
+        /// This function resets outline object when explosions occur
+        /// </summary>
         private void ResetOutline()
         {
             SetTupleParent(_currentTuple, _poolContainer.transform);
@@ -241,6 +279,9 @@ namespace HexagonGencer.Game.Controller.Concrete
             _outline.SetActive(false);
         }
 
+        /// <summary>
+        /// This function reset explosion dictionary
+        /// </summary>
         private void ResetAfterMove()
         {
             for (int i = 0; i < HexagonGencerUtils.GameSettings.BOARD_WIDTH; ++i)
@@ -249,6 +290,10 @@ namespace HexagonGencer.Game.Controller.Concrete
             }
         }
 
+        /// <summary>
+        /// This functions destroys all cells and hexagons on the board,
+        /// clears all lists
+        /// </summary>
         private void DestroyBoard()
         {
             foreach (Cell cell in _cellList)

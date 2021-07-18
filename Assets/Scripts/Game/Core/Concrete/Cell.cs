@@ -22,6 +22,10 @@ namespace HexagonGencer.Game.Core.Concrete
 
         #region Custom Methods
 
+        /// <summary>
+        /// This function updates cell's item
+        /// </summary>
+        /// <param name="newItem">New Item</param>
         public void UpdateHexagon(Item newItem)
         {
             Item = newItem;
@@ -41,6 +45,11 @@ namespace HexagonGencer.Game.Core.Concrete
             _cellBelow = neighbours[3];
         }
 
+        /// <summary>
+        /// This function calculates the target cell after explosion,
+        /// loops until finds a cell whose item isn't null
+        /// </summary>
+        /// <returns>Target cell</returns>
         public Cell GetTargetCell()
         {
             Cell targetCell = this;
@@ -53,6 +62,12 @@ namespace HexagonGencer.Game.Core.Concrete
             return targetCell;
         }
 
+        /// <summary>
+        /// This function checks for a color match for each cell in the list,
+        /// loops through all possible corners and creates tuples
+        /// </summary>
+        /// <param name="matchables"></param>
+        /// <returns></returns>
         public List<Cell> CheckTuples(ref List<Cell> matchables)
         {
             for (int i = 0; i < 6; ++i)

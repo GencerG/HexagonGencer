@@ -1,6 +1,5 @@
 using HexagonGencer.Game.Core.Abstract;
 using HexagonGencer.Game.Core.Concrete;
-using HexagonGencer.Game.Models.Abstract;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +10,11 @@ namespace HexagonGencer.Game.Controller.Concrete
     {
         #region Custom Methods
 
+        /// <summary>
+        /// This function sets item's parent in a tuple
+        /// </summary>
+        /// <param name="tuple">Item Tuple</param>
+        /// <param name="parent">new parent object</param>
         private void SetTupleParent(Tuple<Item, Item, Item> tuple, Transform parent)
         {
             if (tuple == null) { return; }
@@ -20,6 +24,11 @@ namespace HexagonGencer.Game.Controller.Concrete
             tuple.Item3.transform.SetParent(parent);
         }
 
+        /// <summary>
+        /// This function sets item's sorting order in a tuple
+        /// </summary>
+        /// <param name="tuple">Item Tuple</param>
+        /// <param name="sortingOrder">new sorting order</param>
         private void SetTupleSortingOrder(Tuple<Item, Item, Item> tuple, int sortingOrder)
         {
             if (tuple == null) { return; }
@@ -29,6 +38,11 @@ namespace HexagonGencer.Game.Controller.Concrete
             tuple.Item3.SortingOrder.Value = sortingOrder;
         }
 
+        /// <summary>
+        /// This function calculates center of a tuple
+        /// </summary>
+        /// <param name="tuple"></param>
+        /// <returns>Center position</returns>
         private Vector3 GetTuplePosition(Tuple<Item, Item, Item> tuple)
         {
             var position =
@@ -39,6 +53,12 @@ namespace HexagonGencer.Game.Controller.Concrete
             return position;
         }
 
+        /// <summary>
+        /// This functions resets 'IsAdded' paramater for all cells
+        /// </summary>
+        /// <param name="startCell"></param>
+        /// <param name="matchables"></param>
+        /// <returns></returns>
         private List<Cell> CheckTuples(Cell startCell, ref List<Cell> matchables)
         {
             if (startCell == null) { return null; }
@@ -53,6 +73,11 @@ namespace HexagonGencer.Game.Controller.Concrete
             return list;
         }
 
+        /// <summary>
+        /// This function checks for a null item in a tuple
+        /// </summary>
+        /// <param name="tuple"></param>
+        /// <returns>True, if there is any null item</returns>
         private bool CheckNullItemInTuple(Tuple<Item, Item, Item> tuple)
         {
             return tuple.Item1 == null || tuple.Item2 == null || tuple.Item3 == null;

@@ -41,11 +41,18 @@ namespace HexagonGencer.Utils
             list[newIndex] = item;
         }
 
+        /// <summary>
+        /// This function callculates all possible neighbours for a specified cell
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <param name="cellList"></param>
+        /// <returns>Neighbour array</returns>
         public static Cell[] GetNeighboursFromCell(Cell cell, List<Cell> cellList)
         {
             var remainder = cell.Column % 2;
             var offset = GameSettings.BOARD_WIDTH * remainder;
 
+            // neighbour pattern
             var neighbours = new Cell[6] {
                 cell.Index < cellList.Count - GameSettings.BOARD_WIDTH ? cellList[cell.Index + GameSettings.BOARD_WIDTH] : null,
                 cell.Index < cellList.Count - (GameSettings.BOARD_WIDTH + 1) + offset ? cellList[cell.Index + (GameSettings.BOARD_WIDTH + 1) - offset] : null,
@@ -55,7 +62,7 @@ namespace HexagonGencer.Utils
                 cell.Index < cellList.Count - (GameSettings.BOARD_WIDTH - 1) + offset ? cellList[cell.Index + (GameSettings.BOARD_WIDTH - 1) - offset] : null,
             };
 
-
+            // run from edges
             if (cell.Column == 0)
             {
                 neighbours[4] = null;
@@ -71,6 +78,12 @@ namespace HexagonGencer.Utils
             return neighbours;
         }
 
+        /// <summary>
+        /// This function calculates position with offsets, when spawning hexagons
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="j"></param>
+        /// <returns></returns>
         public static Vector2 GetItemPosition(int i, int j)
         {
             if (j % 2 == 0)
@@ -92,6 +105,15 @@ namespace HexagonGencer.Utils
             return hit;
         }
 
+        /// <summary>
+        /// This function calculates which corner is touched,
+        /// creates a direction vector between touch position and item position,
+        /// calculates the angle between direction vector and X-axis
+        /// and decides which corner is touched
+        /// </summary>
+        /// <param name="hexPosition"></param>
+        /// <param name="hitPosition"></param>
+        /// <returns>Item Corner</returns>
         public static ItemCorner GetHexCorner(Vector2 hexPosition, Vector2 hitPosition)
         {
             var direction = hitPosition - hexPosition;
@@ -135,6 +157,12 @@ namespace HexagonGencer.Utils
             }
         }
 
+        /// <summary>
+        /// This function finds highes cell possible in a specified column
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="cellList"></param>
+        /// <returns></returns>
         public static Cell GetTopCell(int column, List<Cell> cellList)
         {
             var index = column + (GameSettings.BOARD_WIDTH * (GameSettings.BOARD_HEIGHT - 1));
