@@ -102,6 +102,7 @@ namespace HexagonGencer.Game.Controller.Concrete
         {
             InitializeBoard();
             SetActivePanel(_backToMenuButton.transform.name);
+            _isInteractable = true;
         }
 
         private void HandleOnWidthChanged(int width)
@@ -140,6 +141,7 @@ namespace HexagonGencer.Game.Controller.Concrete
             InitializeBoard();
             ResetScore();
             SetActivePanel(_backToMenuButton.transform.name);
+            _isInteractable = true;
         }
 
         private void BackToMainMenu()
@@ -148,6 +150,7 @@ namespace HexagonGencer.Game.Controller.Concrete
             ObjectPool.Clear();
             ResetScore();
             SetActivePanel(_mainMenuPanel.transform.name);
+            _isInteractable = true;
         }
 
         private void SetActivePanel(string activePanel)
